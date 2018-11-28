@@ -79,6 +79,7 @@ x_train2, x_test2, y_train2, y_test2 = easydatagen()
 # Makes 31 random forests with 1 to 32 trees
 # Plots the accuracies
 
+"""
 print('Starting training:')
 
 testscores1 = []
@@ -104,3 +105,33 @@ plt.title('Accuracy of random forests')
 plt.xlabel('Trees')
 plt.ylabel('Accuracy')
 plt.show()
+"""
+
+"""
+# 50 trær
+print('Starting training:')
+
+testscores1 = []
+testscores2 = []
+index = []
+
+for i in range(1,51):
+    clf1 = RandomForestClassifier(n_estimators=i, max_depth=None, max_features='auto',
+                             verbose=True, n_jobs=8)
+    clf1.fit(x_train1, y_train1)
+    clf2 = RandomForestClassifier(n_estimators=i, max_depth=None, max_features='auto',
+                             verbose=True, n_jobs=8)
+    clf2.fit(x_train2, y_train2)
+
+    index.append(i)
+    testscores1.append(clf1.score(x_test1, y_test1))
+    testscores2.append(clf2.score(x_test2, y_test2))
+
+plt.plot(index, testscores1, '-b' , label=' "PCA"-test data')
+plt.plot(index, testscores2, '-r', label='Own test data')
+plt.legend(loc='center right')
+plt.title('Accuracy of random forests')
+plt.xlabel('Trees')
+plt.ylabel('Accuracy')
+plt.show()
+"""
