@@ -147,6 +147,40 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
 #######################
 
 
+#######################
+#######################
+# plotting code for confusion matrices
+#######################
+#######################
+
+
+def plot_confusion_matrix(prediction, true_vals, labels, size = (12,12), normalize = 'rows'):
+    confusion = confusion_matrix(prediction, true_vals, labels = labels)
+    fig, ax = plt.subplots(figsize=size)
+    
+    if normalize == 'rows' :
+        im, cbar = heatmap((confusion.T/confusion.sum(axis=1)).T, cuisines, cuisines, ax = ax, cmap = "YlGn", cbarlabel = '1 - confusion' )
+    elif normalize == 'columns' :
+        im, cbar = heatmap(confusion/confusion.sum(axis=1), cuisines, cuisines, ax = ax, cmap = "YlGn", cbarlabel = '1 - confusion' )
+    else :
+        im, cbar = heatmap(confusion, cuisines, cuisines, ax = ax, cmap = "YlGn", cbarlabel = '1 - confusion' )
+    
+    texts = annotate_heatmap(im, valfmt="{x:.2f}")
+    fig.tight_layout()
+    plt.show()
+    
+def clf_confusion(clf, x_train, y_train, x_test, y_test, lables, size = (12,12), normalize = 'rows') :
+    clf.fit(x_train, y_train)
+    predictions = clf.predict(x_test)
+    plot_confusion_matrix(predictions, y_test, lables, size = size, normalize = normalize)
+
+
+#######################
+#######################
+# plotting code for confusion matrices over
+#######################
+#######################
+    
 
 #######################
 #######################
