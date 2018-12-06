@@ -18,6 +18,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 
+from sklearn.metrics import confusion_matrix
+
 
 #######################
 #######################
@@ -159,11 +161,11 @@ def plot_confusion_matrix(prediction, true_vals, labels, size = (12,12), normali
     fig, ax = plt.subplots(figsize=size)
     
     if normalize == 'rows' :
-        im, cbar = heatmap((confusion.T/confusion.sum(axis=1)).T, cuisines, cuisines, ax = ax, cmap = "YlGn", cbarlabel = '1 - confusion' )
+        im, cbar = heatmap((confusion.T/confusion.sum(axis=1)).T, labels, labels, ax = ax, cmap = "YlGn", cbarlabel = '1 - confusion' )
     elif normalize == 'columns' :
-        im, cbar = heatmap(confusion/confusion.sum(axis=1), cuisines, cuisines, ax = ax, cmap = "YlGn", cbarlabel = '1 - confusion' )
+        im, cbar = heatmap(confusion/confusion.sum(axis=1), labels, labels, ax = ax, cmap = "YlGn", cbarlabel = '1 - confusion' )
     else :
-        im, cbar = heatmap(confusion, cuisines, cuisines, ax = ax, cmap = "YlGn", cbarlabel = '1 - confusion' )
+        im, cbar = heatmap(confusion, labels, labels, ax = ax, cmap = "YlGn", cbarlabel = '1 - confusion' )
     
     texts = annotate_heatmap(im, valfmt="{x:.2f}")
     fig.tight_layout()
