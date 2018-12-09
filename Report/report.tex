@@ -1,0 +1,126 @@
+\documentclass[parskip=half]{scrartcl}
+	
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{enumerate} % til \begin{enumerate}[(i)]
+\usepackage{enumitem} % til at styre lister globalt
+\usepackage{latexsym} % symboler
+\usepackage{amsthm} % til thm osv
+\usepackage{amssymb} % flere symbloer
+\usepackage{bm} % bold math symbols
+\usepackage{amsmath} % til pmatrix
+\usepackage[hyphens]{url} %til \url med bindestreger
+%\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\usepackage[pdftex]{graphicx}	
+\usepackage{scrlayer-scrpage} % page setup
+
+\usepackage{framed}
+\usepackage[cache=false]{minted} % for source code
+\usepackage{xcolor}
+%set page header
+\chead{FYS-STK4155 --- project 3}
+
+
+% List will number things using (a), (b), ...
+\setenumerate[1]{label={(\alph*)}} % Global setting
+
+% Title setup
+\title{Report for project 3}
+\date{\today}
+\author{Jon Audun, Mikael Ravndal and Adam P W S{\o}rensen}
+
+\newcommand{\setof}[2]{\left\{ #1 \; \middle\vert \; #2 \right\}}
+
+\DeclareMathOperator{\cspan}{\overline{span}}
+
+% Theorem opsætning
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Standing Assumption}
+\newtheorem*{assumption*}{Standing Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{notation}[theorem]{Notation}
+
+%%%%%%%%%%%%
+% notation short cuts
+\newcommand{\vect}[1]{{\bm{#1}}}
+\newcommand{\funcname}[1]{{\color{blue}{\texttt{#1}}}}
+\newcommand{\varname}[1]{\texttt{#1}}
+%%%%%%%%%%%%
+% bb letters
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+% cal letters
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\cZ}{\mathcal{Z}}
+% frak letters
+\newcommand{\fA}{\mathfrak{A}}
+
+
+%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%
+
+\maketitle
+
+\begin{abstract}
+In this project we analysed some cooking data and did fairly well. 
+\end{abstract}
+
+
+\section{Introduction}
+
+
+\begin{framed}
+All the code we have implemented can be found at \url{https://github.com/???}.
+A print of the jupyter notebook is also attached at the end of this report.
+\end{framed}
+
+\section{Methods} \label{sec:methods}
+
+\subsection{Logistic Regression}
+
+\subsection{\protect\includegraphics{svmheading.png}}
+
+To call a Support Vector Machine classifier with no kernel we use the following Python code:
+\begin{minted}{python}
+svm_clf =  svm.LinearSVC(C = 0.1)
+svm_clf.fit(x_train, y_train)
+preds = svm_clf.fit(x_test)
+print('We did this good: %.4f' % accuracy_score(y_test, preds))
+\end{minted}
+
+\subsection{Decision trees}
+
+\section{Model Selection and Verification}
+
+\section{Results} \label{sec:results}
+
+\section{Conclusion} \label{sec:conclusion}
+
+We did good.
+
+%%%%%%%%%%%%%%
+%Bibliography
+\bibliographystyle{apalike}
+\bibliography{refs}	% expects file "refs.bib"
+%%%%%%%%%%%%%%
+
+
+\end{document}
