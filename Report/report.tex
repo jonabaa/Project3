@@ -16,7 +16,7 @@
 
 \usepackage{framed}
 \usepackage[cache=false]{minted} % for source code
-\usepackage{xcolor}
+%\usepackage{xcolor}
 %set page header
 \chead{FYS-STK4155 --- project 3}
 
@@ -85,16 +85,78 @@ In this project we analysed some cooking data and did fairly well.
 
 
 \section{Introduction}
-
-
+The concept of machine learning have gained a hughe popularity boost over 
+the last couple of years. And this is no wonder: the techniques 
+have a wide range of applications and can be a major asset
+if you know when to use what.
+\par
+When to use what is exactly what we're going to have a brief
+peek into in this project. 
+We will evaluate the performance of three different methods for
+classification on a data set consisting of recipies labeled with 
+the cuisines they belongs to. That is we are looking at a classification 
+problem with multiple classes. The methods we will look at are
+logistic regression, support vector machines and random forests.
 \begin{framed}
 All the code we have implemented can be found at \url{https://github.com/???}.
 A print of the jupyter notebook is also attached at the end of this report.
 \end{framed}
 
 \section{Methods} \label{sec:methods}
+First we need to establish some notation. In the following we assume
+that we are given $N \in \N$ samples consisting of $p \in \N$ features
+and one target. Further we let $K \in \N$ be the number of
+classes in our classification problem. We then denote by $x_{i,j}$ the
+$j$-th feature of the $i$-th sample and by $t_i \in \{1,2, \dots, K\}$
+the target of the $i$-th sample. 
 
 \subsection{Logistic Regression}
+%Logistic regression might be considered the oldest of the three methods
+%we compare, as it is based on the logistic funtion which first was
+%described back in the 19th century \cite{1}.
+Let $\bm{x}_i := (1, x_{i,1}, x_{i,2}, \dots, x_{i,p})$ 
+be the row-vector in $\R^{p+1}$ consisting of a one followed by the 
+features of sample $i$. Also let $\bm{\beta_k}$ be a column-vector in 
+$\R^{p+1}$ for $k \in \{1,2, \dots, K-1\}$ and let 
+$\bm{\theta} := [\bm{\beta}_1 \ \bm{\beta}_2 \ \dots \ \bm{\beta}_{K-1}]$ 
+be the matrix with the $\bm{\beta}_k$'s as it's columns.
+In the case of multinomial logistic regression our model is then given by
+\begin{equation}
+    \begin{split}
+        P_k(\bm{x}; \bm{\theta}) \ = \ 
+        \frac{\exp(\bm{x \beta}_k)}
+        {1 + \sum_{l=1}^{K-1} \exp(\bm{x\beta_}l)}
+        & \quad \quad k \in \{1,2, \dots, ,K - 1\}  \\
+        P_K(\bm{x}; \bm{\theta}) \ = \ 
+        \frac{1}
+        {1 + \sum_{l=1}^{K-1} \exp(\bm{x\beta_}l)}
+    \end{split}
+\end{equation}
+where the ${\bm{\beta_k}}$'s are the 
+coefficients we wish to estimate. $P_k(\bm{x}; \bm{\theta})$ is then the 
+probability that a sample with features $\bm{x}$ belongs to category $k$. 
+\par
+The way we fit our model in the case of logistic regression deviates
+slightly from the usual proceedure with the introduction of a 
+loss function. We now instead define a function we wish to
+maximize, namely the log-likelihood function given by 
+\begin{equation}
+    L(\bm{\theta}) = \sum_{i=1}^N \sum_{k=1}^K 
+    \chi_{\{k\}}(t_i) \log( P_k(\bm{x}_i; \bm{\theta}))
+\end{equation}
+However the difference doesn't go further than the fact that this function
+shouldn't be interpreted exactly as a loss function. 
+Other than that we proceed as usual by minimizing the negative of this 
+function in order to maximize the original function. To do this we
+first need to compute the derivative of this function with respect 
+to $\bm{\theta}$. Some computations gives us
+\begin{equation}
+    \frac{\partial L (\bm{\theta)}}{\partial \beta_{k,j}} \ = \
+    \sum_{i=1}^N \chi_{\{k\}}(t_i) x_{i,j} (1 - P_k(x_i ; \theta))
+\end{equation}
+We are now all set to use the gradient method of your choice to minimize
+$-L$ as a function of $\bm{\theta}$.
+
 
 \subsection{\protect\includegraphics{svmheading.png}}
 
