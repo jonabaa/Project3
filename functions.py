@@ -328,33 +328,33 @@ def mlp_tester(X_train, y_train, nodes = [1], alpha_list = [0.001], folds = 10, 
     return scores
 
 
-### Also want voting classifier
-
-# Adam, implement this
-def generate_design_matrix():
-    design_matrix = None
-
-    return design_matrix
-
-
-# Jon, implement this
-def best_accuracy_log_reg(x_train, y_train, x_test, y_test, param_list):
-    best_accuracy = 0
-
-    return best_accuracy
-
-
-# Adam, implement this
-def best_accuracy_svm(x_train, y_train, x_test, y_test, param_list):
-    best_accuracy = 0
-
-    return best_accuracy
-
-
-# Mikael, implement this
-def best_accuracy_forests(x_train, y_train, x_test, y_test, param_list):
-    best_accuracy = 0
-
-    return best_accuracy
-
-
+def accuracy_with_min_df(min_df_list = [0], svm_parms = [0.1], log_parms = [1], forrest_trees = [10], forrest_depth = [None], folds = 10) :
+    
+    svm_accuracies = []
+    log_accuracies = []
+    forrest_accuracies = []
+    
+    # rather than calling get_design_matrix every time, 
+    # which loads the file train.json every time, 
+    # we just read it in once.
+    data = pd.read_json('train.json') 
+    recipie_list_list = data.ingredients.values.tolist()
+    recipie_string_list = [" ".join(ing) for ing in recipie_list_list]
+    y = data.cuisine.values
+    del data, recipie_list_list
+        
+    for df in min_df_list :
+        print("Testing min_df = %f" % df)
+        vectorizer = CountVectorizer(min_df = df)
+        X = vectorizer.fit_transform(recipie_string_list)
+        # Pick the highst cv scores (avarage of fold accuracies)
+        print("Now doing svm cross validation")
+        svm_accuracies.append(np.amax(svm_tester(X, y, C_list = svm_parms, folds = folds, plot = False)))
+        print("Now doing logistic cross validation")
+        log_accuracies.append(np.amax(logistic_tester(X, y, C_list = log_parms, folds = folds, plot = False)))
+        print("Now doing forrest cross validation")
+        forrest_accuracies.append(np.amax(forrest_tester(X, y, trees_list = forrest_trees, depth_list = forrest_depth, folds = folds, plot = False)))
+        print("")
+        
+    return svm_accuracies, log_accuracies, forrest_accuracies
+        
