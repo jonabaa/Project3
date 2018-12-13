@@ -1,10 +1,5 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: report.aux
 The style file: apalike.bst
-I couldn't open database file refs.bib
----line 11 of file report.aux
- : \bibdata{refs
- :              }
-I'm skipping whatever remains of this command
-I found no database files---while reading file report.aux
+Database file #1: refs.bib
 Warning--I didn't find a database entry for "gradient"
-(There were 2 error messages)
+(There was 1 warning)
