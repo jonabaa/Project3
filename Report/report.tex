@@ -103,12 +103,29 @@ A print of the jupyter notebook is also attached at the end of this report.
 \end{framed}
 
 \section{Methods} \label{sec:methods}
+
 First we need to establish some notation. In the following we assume
 that we are given $N \in \N$ samples consisting of $p \in \N$ features
 and one target. Further we let $K \in \N$ be the number of
 classes in our classification problem. We then denote by $x_{i,j}$ the
 $j$-th feature of the $i$-th sample and by $t_i \in \{1,2, \dots, K\}$
 the target of the $i$-th sample. 
+
+\subsection{Reading in the data}
+The raw data lives in a .json file, which we load using Pandas.
+Each recipe has a cuisine and a list of ingredients. 
+The first thing we do is to join all the ingredients into one string, and then we use scikit learns  \funcname{CountVectorizer} on the corpus of all recipes to get a matrix representation of the data. 
+The \funcname{CountVectorizer} works by making each individual word in the whole corpus a feature.
+Each recipe is then a vector in $\R^p$, with the $k$'th entry equal to the number of times the $k$'th feature (ingredient) appears in the recipe, usually this will be 0 or 1. 
+This means that a recipe that calls for tomato sauce will have the features tomato and sauce set to 1, even if it does not use a tomato.
+
+Before using the \funcname{CountVectorizer} we clean up the data a little bit, namely we replace hyphens with spaces, to make sure e.g. \emph{low-fat} and \emph{low fat} are treated the same, and we drop all numbers and special characters. 
+The latter because the recipes are not all formatted in the same way, with some including amounts.
+When using \funcname{CountVectorizer} we set the parameter \varname{min\_df} to 3.
+This means we only include features that appear at least 3 times in all lists of ingredients. 
+A feature that only appears once is useless for prediction, because it will either be contained only in the
+training data or only in the test data. We also excluded features that only appeared twice because the likelihood
+for them to appear in just the training data or just the test data are relatively high, approximately 68%.  
 
 \subsection{Logistic Regression}
 %Logistic regression might be considered the oldest of the three methods
