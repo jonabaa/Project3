@@ -206,8 +206,9 @@ def get_design_matrix(cleaning_function = lambda x : x, min_df = 0.0, max_df = 1
 
 
 def clean(s) :
-    s = s.replace("-", " ")
-    return s.replace("33", "")
+    clean_s = s.replace('-',' ') # treat low-fat and low fat as the same thing
+    clean_s = ''.join([c for c in clean_s if (c.isalpha() or c ==' ')]) # drop numbers and special characters
+    return clean_s
 
 
 #######################
