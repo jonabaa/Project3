@@ -326,7 +326,7 @@ def mlp_tester(X_train, y_train, nodes = [1], alpha_list = [0.001], folds = 10, 
     If plot is set to true, show a heatmap of the results
     """
     
-    mlp_constructor = (lambda p,q : MLPClassifier(hidden_layer_sizes = p, alpha = q)) 
+    mlp_constructor = (lambda p,q : MLPClassifier(hidden_layer_sizes = p, alpha = q, max_iter=10)) 
     scores = clf_cross_validator(X_train, y_train, mlp_constructor, nodes, alpha_list, folds = folds, plot = plot, label = 'accuracy')
     return scores
 
