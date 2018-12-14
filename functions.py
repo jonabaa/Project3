@@ -250,7 +250,9 @@ def clf_cross_validator(X_train, y_train, clf_constructor, p_list, q_list = [], 
     # We loop over the parameters 
     # and record the avarage of each folds score    
     for p in p_list :
+        print("   p=%s" % str(p))
         for q in q_list :
+            print("      q=%s" % str(q))
             clf = constructor(p,q)
             score = cross_val_score(clf, X_train, y_train, cv=folds)
             scores.append(np.mean(score))
@@ -309,7 +311,7 @@ def logistic_tester(X_train, y_train, C_list = [0.1], folds = 10, plot = False) 
     """
     
     # Not really sure about the solver
-    logistic_constructor = (lambda p : LogisticRegression(solver='lbfgs', multi_class='multinomial', C = p)) 
+    logistic_constructor = (lambda p : LogisticRegression(solver='lbfgs', multi_class='multinomial', C = p, max_iter=10)) 
     scores = clf_cross_validator(X_train, y_train, logistic_constructor, C_list, folds = folds, plot = plot, label = 'accuracy')
     return scores 
 
@@ -324,7 +326,7 @@ def mlp_tester(X_train, y_train, nodes = [1], alpha_list = [0.001], folds = 10, 
     If plot is set to true, show a heatmap of the results
     """
     
-    mlp_constructor = (lambda p,q : MLPClassifier(hidden_layer_sizes = (p), alpha = q)) 
+    mlp_constructor = (lambda p,q : MLPClassifier(hidden_layer_sizes = p, alpha = q)) 
     scores = clf_cross_validator(X_train, y_train, mlp_constructor, nodes, alpha_list, folds = folds, plot = plot, label = 'accuracy')
     return scores
 
