@@ -25,7 +25,7 @@
 \setenumerate[1]{label={(\alph*)}} % Global setting
 
 % Title setup
-\title{Report for project 3}
+\title{Report for Project 3}
 \date{\today}
 \author{Jon Audun, Mikael Ravndal and Adam P W S{\o}rensen}
 
@@ -353,8 +353,31 @@ The plot tells us that it doesn't seem to matter much what we use as max\_featur
 
 \subsection{Voting Classifiers}
 
+Voting classifiers provide a way to combine a collection of classifiers $\varname{clf\_k}$, $k=1,2,\ldots,n$ to form a single classifier, $\varname{voting\_clf}$. 
+There are two ways to form voting classifiers, using hard or soft voting. 
+In hard voting, to predict the class of a data point $z$, we ask each classifier to predict what class a $z$ belongs to, and then the voting classifier returns the class with the most votes. 
+In case of a tie, the scikit learn implementation simply picks the label that comes first when the the labels are sorted. 
+For soft voting, we can only use classifiers that assign a probability to each label. 
+The voting classifier asks each of $\varname{clf\_k}$ for their probability distribution of the labels, sums them up and picks the label with the highest sum. 
 
+As an example, suppose we have three classifiers $A,B,C$ and $2$-labels. 
+Suppose further that on a datapoint $z$ they give the following predictions.
 
+\begin{center}
+\begin{tabular}{c|cc}
+ & P(-1) & P(1) \\ 
+\hline
+\hline 
+A & 0.55 & 0.45 \\ 
+B & 0.51 & 0.49 \\ 
+C & 0.10 & 0.90 \\ 
+SUM & 1.16 & 1.74
+\end{tabular} 
+\end{center}
+
+Since both $A$ and $B$ predict the label $-1$, a hard voting scheme will lead to the voting classifier predicting the label $-1$.
+On the other hand, if we use a soft voting scheme the voting classifier will predict $1$.
+So when using soft voting  we take into account how ''sure´´ each classifier is in its prediction, but we are restricted to using classifiers that return probabilities.  
 \section{Model Selection and Verification}
 
 \section{Results} \label{sec:results}
