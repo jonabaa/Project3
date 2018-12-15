@@ -152,19 +152,33 @@ When using \funcname{CountVectorizer} we set the parameter \varname{min\_df} to 
 This means we only include features that appear at least 3 times in all lists of ingredients. 
 A feature that only appears once is useless for prediction, because it will either be contained only in the
 training data or only in the test data. We also excluded features that only appeared twice because the likelihood
-for them to appear in just the training data or just the test data are relatively high, approximately 68%.  
+for them to appear in just the training data or just the test data are relatively high, approximately 68\%.  
 
 \subsection{Logistic Regression}
+Since we now are dealing with a classification problem with multiple
+categories, there are at least two different ways to approach this. 
+The first one is maybe the easiest one technically, we simply make
+one binary model (as explained in\cite{proj2}) 
+for each category. We thus have $K$ models $P_k$, 
+where $P_k(\bm{x})$ is the likelihood of the sample with 
+features $\bm{x}$ being in category $k$, and $1 - P_k(\bm{x})$ is
+the likelihood that the sample is not in category $k$. One 
+drawback with this approach is that we don't necessarily
+have $\sum_{k=1}^K P_k(x) = 1$, that is, our model doesn't
+act very much like a probability distribution. 
+In many cases this is not a problem, but if this property is desirable
+there's a slightly different way of doing it.
 %Logistic regression might be considered the oldest of the three methods
 %we compare, as it is based on the logistic funtion which first was
 %described back in the 19th century \cite{1}.
+\par
 Let $\bm{x}_i := (1, x_{i,1}, x_{i,2}, \dots, x_{i,p})$ 
 be the row-vector in $\R^{p+1}$ consisting of a one followed by the 
 features of sample $i$. Also let $\bm{\beta_k}$ be a column-vector in 
 $\R^{p+1}$ for $k \in \{1,2, \dots, K-1\}$ and let 
 $\bm{\theta} := [\bm{\beta}_1 \ \bm{\beta}_2 \ \dots \ \bm{\beta}_{K-1}]$ 
 be the matrix with the $\bm{\beta}_k$'s as it's columns.
-In the case of multinomial logistic regression our model is then given by
+Our model is then given by
 \begin{equation}
     \begin{split}
         P_k(\bm{x}; \bm{\theta}) \ = \ 
@@ -178,7 +192,11 @@ In the case of multinomial logistic regression our model is then given by
 \end{equation}
 where the ${\bm{\beta_k}}$'s are the 
 coefficients we wish to estimate. $P_k(\bm{x}; \bm{\theta})$ is then the 
-probability that a sample with features $\bm{x}$ belongs to category $k$. 
+likelihood that a sample with features $\bm{x}$ belongs to category $k$.
+In this case we have the neat property that $\sum_{k=1}^K P_k(x) = 1$
+\cite{htf:es}.
+Hence our model act's more like a probability distribution. In this project
+we use a scikit-learn method that emphazises this last approach.
 \par
 The way we fit our model in the case of logistic regression deviates
 slightly from the usual proceedure with the introduction of a 
@@ -199,47 +217,9 @@ to $\bm{\theta}$. Some computations gives us
     \sum_{i=1}^N \chi_{\{k\}}(t_i) x_{i,j} (1 - P_k(x_i ; \theta))
 \end{equation}
 We are now all set to use the gradient method of your choice to minimize
-$-L$ as a function of $\bm{\theta}$.
-
-\subsubsection{Gradient descent}
-The perhaps simplest approach to minimizing a real valued function
-$f$ iteratively, is to set some starting point $\bm{x}_0$, compute the 
-gradient
-$\nabla f$ in $\bm{x}_0$, and move $\eta > 0$ in the opposite direction of 
-this gradient in order to obtain 
-$\bm{x}_1 = \bm{x}_0 - \eta \nabla f(\bm{x}_0)$. Then
-one iterates by setting 
-$\bm{x}_{i+1} = \bm{x}_i - \eta \nabla f\bm{(}x_0)$ for $i=1,2,...$. 
-This is the framework of gradient descent.
-For small enough $\eta$ this implies $f(\bm{x}_i) > f(\bm{x}_{i+1})$. 
-The problem with this approach is to find out what 
-$\eta$ is small enough. If we choose
-$\eta$ too small, it might take days for our algorithm to converge. If 
-we on the contrary choose $\eta$ to big, it might not converge at all.
-
-\subsubsection{Newton-Raphson}
-The Newton-Raphson method is a kind of gradient descent method, 
-except we choose the learning rate in a more clever way. We thus 
-start out by choosing a random starting point $\bm{x}_0$, just as in the 
-case of gradient descent. The update step however is a bit different:
-\begin{equation}
-    \bm{x}_{i+1} \ = \ \bm{x}_{i} - 
-    \frac{\partial^2 f(\bm{x}_i)}{\partial \bm{x}_i \partial \bm{x}_i^T} 
-    \frac{\partial f(\bm{x}_i)}{\partial \bm{x}_i}
-\end{equation}
-The result is a method that converges way faster than normal gradient 
-descent. The draw back is however the need to compute the Hessian of 
-your objective function. For a thourough derivation of this method 
-consult \cite{gradient}
-
-\subsubsection{Stochastic gradient descent}
-To avoid overfitting when training neural networks, training on 
-randomly picked batches of the training data for each iteration is a good
-regularization method. If we let $b$ be our batch size, the first step of
-this method consists of dividing the training data into $N//b$ batches. 
-One does this by picking from the $N$ data-points without replacement. 
-The second step is then to perform a gradient descent as described in 
-section 2.1.1 with a new batch for each iteration.
+$-L$ as a function of $\bm{\theta}$. This way we fit our model to the given
+set of training data. For an explanation of some gradient-methods consult
+\cite{proj2}.
 
 \subsection{\protect\includegraphics{svmheading.png}}
 
@@ -331,7 +311,8 @@ corresponds, upto some constants, to adding polynomial features of degree $d$.
 
 To use support vector machines in a situation where there are $K > 2$ classes, scikit learn by default uses a so called one-vs-rest approach. 
 For each class $c$ we use a support vector machine classifier with classes $\{-1, 1\}$ chosen so that class $c$ is coded $1$ and all other classes are coded $-1$.
-This gives $K$ hyperplanes with parameters $\beta_0^c, \beta_1^c, \ldots, \beta_p^c$, $c = 1,2,\ldots, K$.
+This gives $K$ hyperplanes with parameters $\beta_0^c, \be
+ta_1^c, \ldots, \beta_p^c$, $c = 1,2,\ldots, K$.
 Given an unseen datapoint $z$ we classify it as belonging to the class $c$ for which $\beta_0^c + \beta_1^c z_1 + \cdots \beta_p^c z_p$ is the largest.    
   
 \subsection{Decision trees}
