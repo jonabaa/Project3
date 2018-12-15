@@ -1,3 +1,13 @@
 \begin{thebibliography}{}
 
+\bibitem[Hastie et~al., 2009]{htf:esl}
+Hastie, T., Tibshirani, R., and Friedman, J. (2009).
+\newblock {\em The elements of statistical learning}.
+\newblock Springer Series in Statistics. Springer, New York, second edition.
+
+\bibitem[James et~al., 2013]{jwht:intro}
+James, G., Witten, D., Hastie, T., and Tibshirani, R. (2013).
+\newblock {\em An Introduction to Statistical Learning}.
+\newblock Springer Texts in Statistics. Springer, New York.
+
 \end{thebibliography}

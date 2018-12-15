@@ -25,7 +25,7 @@
 \setenumerate[1]{label={(\alph*)}} % Global setting
 
 % Title setup
-\title{Report for project 3}
+\title{Report for Project 3}
 \date{\today}
 \author{Jon Audun, Mikael Ravndal and Adam P W S{\o}rensen}
 
@@ -85,8 +85,24 @@ In this project we analysed some cooking data and did fairly well.
 
 
 \section{Introduction}
-The concept of machine learning have gained a hughe popularity boost over 
-the last couple of years. And this is no wonder: the techniques 
+
+In this project we explore a delicious classification problem: 
+Given a list of ingredients, can you predict what cuisine the final dish will be?
+There are certainly cases where this is easy. 
+If you meet you friend at the store and they have burritos, guacamole, salad, and beef in their basket, you can feel confident they are having Mexican food. 
+But what if they have flour, yeast, and milk? 
+They are probably baking, but are they making a French baguette our Indian naan bread?   
+
+In this project we will use various machine learning techniques to solve this classification problem.
+Our data comes from an old kaggle competition. 
+
+\emph{describe data here!!!}
+
+The paper is organized as follows: A section on methods, a section on selection and so on. 
+
+
+Machine learning has gained a huge popularity boost over the last couple of years. 
+And this is no wonder: the techniques 
 have a wide range of applications and can be a major asset
 if you know when to use what.
 \par
@@ -97,18 +113,36 @@ classification on a data set consisting of recipies labeled with
 the cuisines they belongs to. That is we are looking at a classification 
 problem with multiple classes. The methods we will look at are
 logistic regression, support vector machines and random forests.
+
 \begin{framed}
 All the code we have implemented can be found at \url{https://github.com/???}.
 A print of the jupyter notebook is also attached at the end of this report.
 \end{framed}
 
 \section{Methods} \label{sec:methods}
+
 First we need to establish some notation. In the following we assume
 that we are given $N \in \N$ samples consisting of $p \in \N$ features
 and one target. Further we let $K \in \N$ be the number of
 classes in our classification problem. We then denote by $x_{i,j}$ the
 $j$-th feature of the $i$-th sample and by $t_i \in \{1,2, \dots, K\}$
 the target of the $i$-th sample. 
+
+\subsection{Reading in the data}
+The raw data lives in a .json file, which we load using Pandas.
+Each recipe has a cuisine and a list of ingredients. 
+The first thing we do is to join all the ingredients into one string, and then we use scikit learns  \funcname{CountVectorizer} on the corpus of all recipes to get a matrix representation of the data. 
+The \funcname{CountVectorizer} works by making each individual word in the whole corpus a feature.
+Each recipe is then a vector in $\R^p$, with the $k$'th entry equal to the number of times the $k$'th feature (ingredient) appears in the recipe, usually this will be 0 or 1. 
+This means that a recipe that calls for tomato sauce will have the features tomato and sauce set to 1, even if it does not use a tomato.
+
+Before using the \funcname{CountVectorizer} we clean up the data a little bit, namely we replace hyphens with spaces, to make sure e.g. \emph{low-fat} and \emph{low fat} are treated the same, and we drop all numbers and special characters. 
+The latter because the recipes are not all formatted in the same way, with some including amounts.
+When using \funcname{CountVectorizer} we set the parameter \varname{min\_df} to 3.
+This means we only include features that appear at least 3 times in all lists of ingredients. 
+A feature that only appears once is useless for prediction, because it will either be contained only in the
+training data or only in the test data. We also excluded features that only appeared twice because the likelihood
+for them to appear in just the training data or just the test data are relatively high, approximately 68%.  
 
 \subsection{Logistic Regression}
 %Logistic regression might be considered the oldest of the three methods
@@ -199,14 +233,97 @@ section 2.1.1 with a new batch for each iteration.
 
 \subsection{\protect\includegraphics{svmheading.png}}
 
-To call a Support Vector Machine classifier with no kernel we use the following Python code:
-\begin{minted}{python}
-svm_clf =  svm.LinearSVC(C = 0.1)
-svm_clf.fit(x_train, y_train)
-preds = svm_clf.fit(x_test)
-print('We did this good: %.4f' % accuracy_score(y_test, preds))
-\end{minted}
+This section is based on \cite[Chapter 9]{jwht:intro} and \cite[Chapter 12]{htf:esl}.
 
+\subsubsection{Linearly separable data}
+
+Support vector machines where originally introduced to be used for a two class classification, so we will discuss that case first. 
+For ease of notation let the classes be $\{-1,1\}$.
+Recall that if $\beta_0, \beta_1, \ldots, \beta_p \in \R$, then we can define a hyperplane $H$ in $\R^p$ by 
+\[
+	H = \setof{\begin{pmatrix} z_1 & z_2  & \cdots & z_p \end{pmatrix}}{\beta_0 + z_1 \beta_1 + z_2 \beta_2 + \cdots + z_p \beta_p = 0}. 
+\]  
+We can always assume that  
+\[
+	\sum_k \beta_k^2 = 1,
+\]
+and from here on out we will do just that. 
+
+We say that a given data set is linearly separable, if there exists a hyperplane $H$ in $\R^p$ such that all data points $x_i = \begin{pmatrix} x_{i1} & x_{i2}  & \cdots & x_{ip} \end{pmatrix}$ with $t_i = 1$ satisfy 
+\begin{equation} \label{eq:svmupper}
+	\beta_0 + x_{i1} \beta_1 + x_{i2} \beta_2 + \cdots + x_{ip} \beta_p > 0,
+\end{equation}
+and all data points $x_j = \begin{pmatrix} x_{j1} & x_{j2}  & \cdots & x_{jp} \end{pmatrix}$ with $t_j = -1$ satisfy
+\begin{equation} \label{eq:svmlower}
+	\beta_0 + x_{j1} \beta_1 + x_{j2} \beta_2 + \cdots + x_{jp} \beta_p < 0.
+\end{equation}
+Intuitively all points with $t_i = 1$ lie on one side of $H$ and all points with $t_i = -1$ lie on the other side. 
+This intuition is entirely correct if $p = 2$, if $p>2$ then it is still correct, provided one has the right mental image of the sides of hyperplane. 
+Note that equations (\ref{eq:svmupper}) and (\ref{eq:svmlower}) can be combined to the single equation
+\begin{equation} \label{eq:svmsep}
+	t_i(\beta_0 + x_{i1} \beta_1 + x_{i2} \beta_2 + \cdots + x_{ip} \beta_p) > 0.
+\end{equation}
+Given some new data point $z = \begin{pmatrix} z_1 & z_2  & \cdots & z_p \end{pmatrix}$, we then predict $t \in \{-1,1\}$ such that
+\[
+	t(\beta_0 + z_1 \beta_1 + z_2 \beta_2 + \cdots + z_p \beta_p) > 0.
+\] 
+
+\subsubsection{Data that is not linearly separable}
+
+If a given data set is linearly separable, then there will be infinitely many separating hyperplanes. 
+From one point of view, any one of these will do to make predictions. 
+However, it seems intuitively correct to pick a hyperplane that is in the middle of the two classes. 
+This is achieved by choosing the so called maximal margin hyperplane.
+That is, we want to choose $\beta_0, \beta_1, \cdots, \beta_p$ such that we maximize $M > 0$ under the condition that 
+\[
+	t_i(\beta_0 + x_{i1} \beta_1 + x_{i2} \beta_2 + \cdots + x_{ip} \beta_p) \geq M,
+\] 
+for all data points $x_i$.
+
+Of course, or data will not usually be linearly separable. 
+To still get useful classification, we will accept hyperplanes that do not cleanly separate the points. 
+This is achieved by introducing for each data point $x_i$ a slack variable $\varepsilon_i \geq 0$. 
+Then aim to find $\beta_0, \beta_1, \ldots, \beta_p$ that maximize $M > 0$ under the conditions 
+\begin{gather*}
+	t_i(\beta_0 + x_{i1} \beta_1 + x_{i2} \beta_2 + \cdots + x_{ip} \beta_p) \geq M(1-\varepsilon_i), \\
+	\sum \varepsilon_i \leq C,	
+\end{gather*} 
+where $C \geq 0$ is a tuning parameter.
+We note that if $\varepsilon_i = 0$, then the point $x_i$ is outside the margin of the hyperplane, if $0 < \varepsilon_i < 1$, then $x_i$ is inside the margin but on the right side of the hyperplane, and if $1 < \varepsilon_i$, then $x_i$ is on the wrong side of the hyperplane, i.e. it is misclassified.  
+Hence $C$ is an upper bound on the number of point we are allowed to misclassify when we choose $H$.
+However, a choice of $C < 1$ is still very valid, it just corresponds to choosing a very narrow margin, is we do not allow many points to be inside the margin.    
+
+\subsubsection{Kernels}
+
+Actually solving the maximization problem of finding a hyperplane $H$ and a margin $M$ is done using Lagrange multipliers. 
+We will not discuss how this is done in detail, but will just focus on two aspect of this approach (see equation (12.17) in \cite{htf:esl})
+\begin{enumerate}
+	\item To find $H$ and $M$ one does not actually need the data points $x_i$ but rather all inner products $\langle x_i, x_j \rangle$. 
+	\item $H$ and $M$ will not depend on all the datapoints $x_i$, the points they do depend on are called the support vectors. 
+\end{enumerate}
+
+The first of these points leads to the kernel techniques for support vector machines.
+In a variety of classification problems it can be helpful to change the feature space. 
+This is done by finding some mapping $\phi \colon \R^p \to \R^q$ and then classifying $\phi(x_i)$ instead of $x_i$. 
+A typical example is to add polynomial features, if $p = 2$ say, we might want to consider not only $\begin{pmatrix} z_1 & z_2 \end{pmatrix}$ but instead $\begin{pmatrix} z_1 & z_2 & z_1^2 & z_1 z_2 & z_2^2 \end{pmatrix}$.  
+Computing all these extra features can be a time and memory consuming task, but for support vector machines one does not need to do it. 
+Since we only need inner products of datapoints, it suffices to find a kernel function $K$ such that 
+\[
+	K(x_i, x_j) = \langle \phi(x_i), \phi(x_j) \rangle.
+\]
+For instance using the kernel function
+\[
+	K(x_i, x_j) = \sum \left( 1 + \sum_{k=1}^p x_{ik} x_{jk} \right)^d,
+\]
+corresponds, upto some constants, to adding polynomial features of degree $d$. 
+
+\subsubsection{More than two classes}
+
+To use support vector machines in a situation where there are $K > 2$ classes, scikit learn by default uses a so called one-vs-rest approach. 
+For each class $c$ we use a support vector machine classifier with classes $\{-1, 1\}$ chosen so that class $c$ is coded $1$ and all other classes are coded $-1$.
+This gives $K$ hyperplanes with parameters $\beta_0^c, \beta_1^c, \ldots, \beta_p^c$, $c = 1,2,\ldots, K$.
+Given an unseen datapoint $z$ we classify it as belonging to the class $c$ for which $\beta_0^c + \beta_1^c z_1 + \cdots \beta_p^c z_p$ is the largest.    
+  
 \subsection{Decision trees}
 Wikipedias overview on decision trees:
 \begin{quotation}
@@ -234,6 +351,33 @@ The default in the scikitlearn classifier is using the root of the number of all
 \\
 The plot tells us that it doesn't seem to matter much what we use as max\_features. The optimum in the plot is around 40 which gives us just more reason to stick with the default of using the root of all the features as max\_features.
 
+\subsection{Voting Classifiers}
+
+Voting classifiers provide a way to combine a collection of classifiers $\varname{clf\_k}$, $k=1,2,\ldots,n$ to form a single classifier, $\varname{voting\_clf}$. 
+There are two ways to form voting classifiers, using hard or soft voting. 
+In hard voting, to predict the class of a data point $z$, we ask each classifier to predict what class a $z$ belongs to, and then the voting classifier returns the class with the most votes. 
+In case of a tie, the scikit learn implementation simply picks the label that comes first when the the labels are sorted. 
+For soft voting, we can only use classifiers that assign a probability to each label. 
+The voting classifier asks each of $\varname{clf\_k}$ for their probability distribution of the labels, sums them up and picks the label with the highest sum. 
+
+As an example, suppose we have three classifiers $A,B,C$ and $2$-labels. 
+Suppose further that on a datapoint $z$ they give the following predictions.
+
+\begin{center}
+\begin{tabular}{c|cc}
+ & P(-1) & P(1) \\ 
+\hline
+\hline 
+A & 0.55 & 0.45 \\ 
+B & 0.51 & 0.49 \\ 
+C & 0.10 & 0.90 \\ 
+SUM & 1.16 & 1.74
+\end{tabular} 
+\end{center}
+
+Since both $A$ and $B$ predict the label $-1$, a hard voting scheme will lead to the voting classifier predicting the label $-1$.
+On the other hand, if we use a soft voting scheme the voting classifier will predict $1$.
+So when using soft voting  we take into account how ''sure´´ each classifier is in its prediction, but we are restricted to using classifiers that return probabilities.  
 \section{Model Selection and Verification}
 
 \section{Results} \label{sec:results}
