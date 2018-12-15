@@ -96,7 +96,17 @@ They are probably baking, but are they making a French baguette our Indian naan 
 In this project we will use various machine learning techniques to solve this classification problem.
 Our data comes from an old kaggle competition. 
 
-\emph{describe data here!!!}
+Our data consists of 39,774 recipes which spans over 20 different cuisines. They are distributed between the 20 cuisines like this:
+
+\includegraphics[scale=.42]{images/cuisine_number}
+We can tell from the plot that around 36\% of the data is labeled as either italian or mexican cuisine. So we should be prepared on that this uneven distribution of the recipes will affect how our predictors will do.
+
+It is also interesting to look at what the most common ingredients are:
+
+
+\includegraphics[scale=.55]{images/common_ing}
+Salt is the most common ingredient by far. It is so common, that we can expect it to not be as good of a classifier as it probably won't be particular for a certain cuisine.
+The other ingredients are more evenly spread out, which is expected.
 
 The paper is organized as follows: A section on methods, a section on selection and so on. 
 
