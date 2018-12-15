@@ -311,8 +311,7 @@ corresponds, upto some constants, to adding polynomial features of degree $d$.
 
 To use support vector machines in a situation where there are $K > 2$ classes, scikit learn by default uses a so called one-vs-rest approach. 
 For each class $c$ we use a support vector machine classifier with classes $\{-1, 1\}$ chosen so that class $c$ is coded $1$ and all other classes are coded $-1$.
-This gives $K$ hyperplanes with parameters $\beta_0^c, \be
-ta_1^c, \ldots, \beta_p^c$, $c = 1,2,\ldots, K$.
+This gives $K$ hyperplanes with parameters $\beta_0^c, \beta_1^c, \ldots, \beta_p^c$, $c = 1,2,\ldots, K$.
 Given an unseen datapoint $z$ we classify it as belonging to the class $c$ for which $\beta_0^c + \beta_1^c z_1 + \cdots \beta_p^c z_p$ is the largest.    
   
 \subsection{Decision trees}
@@ -369,7 +368,73 @@ SUM & 1.16 & 1.74
 Since both $A$ and $B$ predict the label $-1$, a hard voting scheme will lead to the voting classifier predicting the label $-1$.
 On the other hand, if we use a soft voting scheme the voting classifier will predict $1$.
 So when using soft voting  we take into account how ''sure´´ each classifier is in its prediction, but we are restricted to using classifiers that return probabilities.  
+
 \section{Model Selection and Verification}
+
+We used cross validation to decide how to tune our models. 
+Because of the size of our data set we felt that three folds would suffice.
+To preform the cross validation we used the scikit learn method \funcname{cross\_val\_score}, which returns a list of accuracies, one for each fold. 
+We simply took the average of this to the expected accuracy of a method on unseen data, similar to how cross validation for MSE is treated in \cite[Chapter 7.10]{htf:esl}.
+
+\subsection{Single model}
+
+For Logistic Regression, we tune the $C$ parameter. 
+The following figure shows the results of our cross validation computations. 
+
+\begin{figure}[H]
+\caption{Choosing $C$ for logistic regression.}
+\centering
+\includegraphics[scale=0.6]{images/logistic_params.png}
+\end{figure}
+
+We get the best results when using $C=1$.
+
+For the linear support vector machine the tuning parameter is also called $C$. 
+Below are the most important outputs of our cross validation computations. 
+
+\begin{figure}[H]
+\caption{Choosing $C$ for support vector machines.}
+\centering
+\includegraphics[scale=0.6]{images/linear_svm_params.png}
+\end{figure}
+
+Here the best constant is $C = 0.1$.
+
+Random forrest are a voting classifier, so we would expect that more trees yield better results. 
+We might be concerned that having too many leafs could lead to over fitting, but as the figure below shows, that is not the case. 
+The horizontal axis is the maximal depth of the trees, and the vertical indicates the number of trees. 
+ 
+\begin{figure}[H]
+\caption{Tuning random forests.}
+\centering
+\includegraphics[scale=0.6]{images/forrest_params1.png}
+\includegraphics[scale=0.6]{images/forrest_params2.png}
+\end{figure}
+
+As expected more trees give better results. 
+However, we see that after 100 trees we see a very small increase in accuracy as we add more trees, $0.7492$ for 100 trees vs $0.7556$ for 1000 trees. 
+Since the time to train random forests grows with the number of trees, we will restrict our selves to 100 trees when we later turn our attention to voting classifiers. 
+
+The final single model we have used is neural networks, in the form of scikit learns multilayer perceptron classifier. 
+Here there are two parameters to tweak, the network structure in the form of number of layers and number of notes in each layer, as well as a regularization parameter called $\alpha$.
+The regularization done by $\alpha$ is like the ridge (or $\ell^2$) type, that have been discussed in past projects. 
+While we tested more settings, the below figures give all the relevant information.
+
+\begin{figure}[H]
+\caption{Tuning multilayer perceptron classifier.}
+\centering
+\includegraphics[scale=0.6]{images/mlp_params1.png}
+\includegraphics[scale=0.6]{images/mlp_params2.png}
+\end{figure}
+
+We see that most setting actually end up in a very similar space.
+Increasing the number of nodes does improve the accuracy, but as for the forests, we will for computation reasons restrict ourselves.
+This time to the setting of a single layer network with 1000 hidden nodes and $\alpha = 0.01$.
+
+\subsection{Voting Classifiers}
+
+
+ 
 
 \section{Results} \label{sec:results}
 
