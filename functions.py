@@ -311,7 +311,7 @@ def logistic_tester(X_train, y_train, C_list = [0.1], folds = 10, plot = False) 
     """
     
     # Not really sure about the solver
-    logistic_constructor = (lambda p : LogisticRegression(solver='lbfgs', multi_class='multinomial', C = p, max_iter=10)) 
+    logistic_constructor = (lambda p : LogisticRegression(solver='lbfgs', multi_class='multinomial', C = p)) 
     scores = clf_cross_validator(X_train, y_train, logistic_constructor, C_list, folds = folds, plot = plot, label = 'accuracy')
     return scores 
 
