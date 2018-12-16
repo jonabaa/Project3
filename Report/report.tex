@@ -194,7 +194,7 @@ where the ${\bm{\beta_k}}$'s are the
 coefficients we wish to estimate. $P_k(\bm{x}; \bm{\theta})$ is then the 
 likelihood that a sample with features $\bm{x}$ belongs to category $k$.
 In this case we have the neat property that $\sum_{k=1}^K P_k(x) = 1$
-\cite{htf:es}.
+\cite{htf:esl}.
 Hence our model act's more like a probability distribution. In this project
 we use a scikit-learn method that emphazises this last approach.
 \par
@@ -283,8 +283,8 @@ We note that if $\varepsilon_i = 0$, then the point $x_i$ is outside the margin 
 Hence $C$ is an upper bound on the number of point we are allowed to misclassify when we choose $H$.
 However, a choice of $C < 1$ is still very valid, it just corresponds to choosing a very narrow margin, is we do not allow many points to be inside the margin.    
 
-\subsubsection{Kernels}
-
+\subsubsection{Kernels} \label{sssec:kernels}
+ 
 Actually solving the maximization problem of finding a hyperplane $H$ and a margin $M$ is done using Lagrange multipliers. 
 We will not discuss how this is done in detail, but will just focus on two aspect of this approach (see equation (12.17) in \cite{htf:esl})
 \begin{enumerate}
@@ -313,6 +313,12 @@ To use support vector machines in a situation where there are $K > 2$ classes, s
 For each class $c$ we use a support vector machine classifier with classes $\{-1, 1\}$ chosen so that class $c$ is coded $1$ and all other classes are coded $-1$.
 This gives $K$ hyperplanes with parameters $\beta_0^c, \beta_1^c, \ldots, \beta_p^c$, $c = 1,2,\ldots, K$.
 Given an unseen datapoint $z$ we classify it as belonging to the class $c$ for which $\beta_0^c + \beta_1^c z_1 + \cdots \beta_p^c z_p$ is the largest.    
+
+\subsubsection{Getting probabilities}
+
+While support vector machines do not provide a probability estimate as described above, there is some research into how to get that. 
+Scikit learn implements a methods developed in \cite{wual}.
+However, computing these are expensive and they are not guaranteed to give the same prediction as the usual support vector machine, so we will not use this approach in this project. 
   
 \subsection{Decision trees}
 Wikipedias overview on decision trees:
@@ -474,7 +480,24 @@ The three highest accuracies are for soft voting with forest v mlp (0.7893), sof
 These are so close, that recommending one over another based only on these number seems very hard.   
 Instead we think soft voting with forest v mlp v logistic is likely to be the best option.
 This is based on a preference for soft voting over hard voting, and for having more classifiers casting their vote.  
+
+\subsection{Kernels and feature transformation}
  
+As we discussed in Section \ref{sssec:kernels}, kernel tricks for support vector machines provide a relative cheap (in memory usage and computation time) way to look at something close to a transformed feature space. 
+We used cross validation to test the performance of a polynomial kernel, a sample of our finding are in Figure \ref{fig:polysvm}.
+
+\begin{figure}[H]
+\caption{Average accuracies for poly kernel SVM} \label{fig:polysvm}
+\centering
+\includegraphics[scale=0.6]{images/svm_poly.png}
+\end{figure}
+
+Our take away is that the polynomial kernel does not increase the performance of support vector machines. 
+We take this as evidence that using a polynomial transformation of the features is unlikely to improve the other methods. 
+Note also that the only interesting polynomial terms would be the interaction terms.
+This is because our data points are mainly vectors with entries from $\{0,1\}$.
+
+
 
 \section{Results} \label{sec:results}
 

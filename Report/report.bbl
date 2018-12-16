@@ -10,4 +10,10 @@ James, G., Witten, D., Hastie, T., and Tibshirani, R. (2013).
 \newblock {\em An Introduction to Statistical Learning}.
 \newblock Springer Texts in Statistics. Springer, New York.
 
+\bibitem[Wu et~al., 2004]{wual}
+Wu, T.-F., Lin, C.~J., and Weng, R.~C. (2004).
+\newblock Probability estimates for multi-class classification by pairwise
+  coupling.
+\newblock {\em Journal of Machine Learning Research}, 5.
+
 \end{thebibliography}
