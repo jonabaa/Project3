@@ -433,7 +433,47 @@ This time to the setting of a single layer network with 1000 hidden nodes and $\
 
 \subsection{Voting Classifiers}
 
+We explored various combinations of the classifiers described above, and bundled them intok a single voting classifier. 
+Since there is no good way to break ties for a hard voting scheme with only two classifiers voting, we are not investigating them. 
+Instead we looked at soft voting for all pairs of classifiers that give probabilities, that is logistic regression, random forests and multilayer preceptrons. 
+We also looked at soft voting for all three at once, and two cases of hard voting. 
+The results of the cross validation are show in Table \ref{tab:softvoting} (soft voting) and Table \ref{tab:hardvoting} (hard voting). 
+Since logistic regression and support vector machines often act very similiar \ref{} % we need something here
+we did not consider triples like svm v forest v logistic with hard voting. 
 
+\begin{table} 
+\caption{Soft voting} \label{tab:softvoting}
+\begin{center}
+\begin{tabular}{lc}
+Voting scheme & Average accuracy \\ 
+\hline 
+\hline
+logistic v forest & 0.793308 \\ 
+logistic v mlp & 0.785866 \\ 
+forest v mlp & 0.798361 \\ 
+forest v mlp v logistic &  0.796149 \\ 
+\end{tabular} 
+\end{center} 
+\end{table}
+ 
+\begin{table} 
+\caption{Hard voting} \label{tab:hardvoting}
+\begin{center}
+\begin{tabular}{lc}
+Voting scheme & Average accuracy \\ 
+\hline 
+\hline
+svm v forest v mlp &  0.798084 \\ 
+svm v forest v mlp v logistic & 0.790843 \\ 
+\end{tabular} 
+\end{center} 
+\end{table}
+
+The first thing we observe is that all most all the voting classifiers are slightly better than the single model classifiers and that they all give very similar accuracies. 
+The three highest accuracies are for soft voting with forest v mlp (0.7893), soft voting with forest v mlp v logistic (0.7961), and hard voting with svm v forest v mlp (0.7890).
+These are so close, that recommending one over another based only on these number seems very hard.   
+Instead we think soft voting with forest v mlp v logistic is likely to be the best option.
+This is based on a preference for soft voting over hard voting, and for having more classifiers casting their vote.  
  
 
 \section{Results} \label{sec:results}
