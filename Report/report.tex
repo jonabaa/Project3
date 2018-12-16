@@ -80,7 +80,13 @@
 \maketitle
 
 \begin{abstract}
-In this project we analysed some cooking data and did fairly well. 
+In this project we work on a classification problem for cooking data coming from an old kaggle competition.
+We investigate four single classifier methods, logistic regression, support vector machines, random forests and multilayer perceptrons (neural networks). 
+We used cross validation to tune the models.
+The best single classifier model was support vector machines which had a predicted accuracy of $\approx 0.78$. 
+Using voting classifiers we combined our models to get a predicted accuracy of $\approx 0.80$. 
+
+We made a late submission to kaggle and got an accuracy of $\approx 0.80$, which was about $0.02$ worse than the winning submission. 
 \end{abstract}
 
 
@@ -328,6 +334,7 @@ Building a classification decision tree works in roughly two steps:
 2. For every observation that falls into the region $R_j$, we make the same prediction, which is simply the \emph{most commonly occurring class} of training observations in the region to which it belongs.
 
 Each $X_i$ uses all data points as data to split into the regions, $R_j$. The result of this is then that you get a classifier which predicts well on the training data, but falls short on testing data. This is because it fits its classifier perfectly to the data which it has seen. If it just splits up into enough $R_i$'s, it would be able to place every sample perfectly. So a lone decision tree with all features will almost always be overfitted.
+
 \subsubsection{Rather a forest, than just a tree}
 This is why random forests are more popular. A random forest can usually generalise much better then what a lone tree can.\\
 A random forest is constructed by choosing how many decision trees you want in the forest and then train every tree on your data. But the construction of these trees is done differently then a lone decision tree.\\
@@ -518,27 +525,50 @@ The results are not public, so below is a screen shot of our result.
 
 We got an accuracy of 0.80269. 
 Which would have given us a somewhat unimpressive 231st place in the competition. 
-It is worth noting the the highest accuracy achieved in the competition is 0.82783, so we are only off by about 2\% worth of accuracy. 
+It is worth noting the the highest accuracy achieved in the competition is 0.82783, so we are only off by about 2\% worth of accuracy.
 
 There are something one could do to do better in the competition:
 We could base our \funcname{CountVectorizer} on the test set, so we only consider ingredients that we will be tested on as features. 
 Since there is no submission limit, we could also just have submitted various attempt and seen which one got a better score.
 But these are competition solutions. 
+In this vain, it is also possible that we should have included the \varname{min\_df} parameter in our search for the best parameters for each method. 
+This feels a little off, as we would look for the data that gives our methods the best results, but might still be good for the competition. 
+ 
+In general we might have spent more time exploring the quality of the data. 
+There are for instance 22 recipes that only have one ingredient, including a French and an Indian recipe both calling only for butter. 
+There is also an Indian recipe calling only for ``grained,'' which must almost surely be a typo of sorts. 
+However, we did not see a great systematic way to improve the quality of our data, and there were way to many recipes to run through by hand. 
+
+We might also have taken a more linguistic approach and looked for key words in recipes. 
+If you are specifically asked to use Italian sausages, chances seem very good that you are making Italian food. 
+We assume that there are other similar but less obvious ways one could classify some recipes.
+Then once these easy ones were out of the way, we could turn to machine learning techniques, but we did not explore this avenue.     
 
 To get an understanding on where our classifier fails, we split or training data into 2, trained on one part and then tried to to predict the other.
-Figure \ref{fig:confusion} shows the confusion matrix for this test. 
-	
- 
+Figure \ref{fig:confusion} shows the confusion matrix for this test.
+Each row is normalized, so that the row labeled Italian shows that of the Italian recipes 0.85 were correctly classified as Italian, but 0.04 were classified as French. 
+We also see that French is in fact the most common misclassification for Italian recipes. 
+
 \begin{figure}[H]
 \caption{Confusion matrix} \label{fig:confusion}
 \centering
 \includegraphics[scale=0.6]{images/confusion.png}
 \end{figure}
 
+The confusion matrix shows that the relative biggest misclassification is for Cajun Creole food, where 13\% is incorrectly label southern US. 
+As Cajun Creole stems from Louisianan, which is very much in the southern US, this does not seem like a big mistake. 
+In fact, we see the confusion matrix as showing that our classifier does a mostly good job.
+It might not always be right, but when it is wrong it is not very wrong, as it might confuse cuisines that are intuitively close like Irish and British. 
+ 
 \section{Conclusion} \label{sec:conclusion}
 
-We did good.
+We saw that almost all our single classifiers did a fine job.
+The best tuned versions have predicted accuracies of $\approx 0.78$ for logistic regression, support vector machines, and multilayer perceptrons, and $\approx 0.75$ for random forest.
+Using voting classifiers we could get the predicted accuracy upto $\approx 0.79$. 
+In the kaggle competition, where we got an accuracy of $\approx 0.80$ the winner got $\approx 0.82$.
 
+The results suggest that the data splits into a large chunk that is very easy to classify, and a smaller chunk where classification is very hard.
+On this smaller chunk winning even a single percentage point of extra accuracy requires cleverness. 
 %%%%%%%%%%%%%%
 %Bibliography
 \bibliographystyle{apalike}
