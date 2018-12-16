@@ -499,9 +499,41 @@ We take this as evidence that using a polynomial transformation of the features 
 Note also that the only interesting polynomial terms would be the interaction terms.
 This is because our data points are mainly vectors with entries from $\{0,1\}$.
 
+Another thing to note in Figure \ref{fig:polysvm} is that the average accuracy is the same for $C=0.1, 1, 10$ with a third degree polynomial. 
+This might be because those $C$ values end up given the exact same support vectors. 
+But by increasing the number of points we allow inside the margin and to cross it, the classifier can depend on more data points and therefore get better accuracy. 
+Mostly it is odd though.  
 
+\section{Results and discussion} \label{sec:results}
 
-\section{Results} \label{sec:results}
+As mentioned in the introduction our data set comes from a kaggle competition. 
+The competition is over, but allows late submissions, so submitted our best classifier using the script one can see at \url{github/somewhere}. 
+The results are not public, so below is a screen shot of our result.
+
+\begin{figure}[H]
+\caption{Kaggle result} \label{fig:kaggleresult}
+\centering
+\includegraphics[scale=0.3]{images/kaggle_result.png}
+\end{figure}
+
+We got an accuracy of 0.80269. 
+Which would have given us a somewhat unimpressive 231st place in the competition. 
+It is worth noting the the highest accuracy achieved in the competition is 0.82783, so we are only off by about 2\% worth of accuracy. 
+
+There are something one could do to do better in the competition:
+We could base our \funcname{CountVectorizer} on the test set, so we only consider ingredients that we will be tested on as features. 
+Since there is no submission limit, we could also just have submitted various attempt and seen which one got a better score.
+But these are competition solutions. 
+
+To get an understanding on where our classifier fails, we split or training data into 2, trained on one part and then tried to to predict the other.
+Figure \ref{fig:confusion} shows the confusion matrix for this test. 
+
+ 
+\begin{figure}[H]
+\caption{Confusion matrix} \label{fig:confusion}
+\centering
+\includegraphics[scale=0.6]{images/confusion.png}
+\end{figure}
 
 \section{Conclusion} \label{sec:conclusion}
 
