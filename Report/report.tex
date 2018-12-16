@@ -321,11 +321,13 @@ Scikit learn implements a methods developed in \cite{wual}.
 However, computing these are expensive and they are not guaranteed to give the same prediction as the usual support vector machine, so we will not use this approach in this project. 
   
 \subsection{Decision trees}
-Wikipedias overview on decision trees:
-\begin{quotation}
-	A decision tree is a flowchart-like structure in which each internal node represents a ``test'' on an attribute (e.g. whether a coin flip comes up heads or tails), each branch represents the outcome of the test, and each leaf node represents a class label (decision taken after computing all attributes). The paths from root to leaf represent classification rules.
-\end{quotation}
-A decision tree typically uses all of the features as its features. The result of this is then that you get a classifier which predicts well on the training data, but falls short on testing data. This is because it fits its classifier perfectly to the data which it has seen. So a lone decision tree with all features will almost always be overfitted.
+Building a classification decision tree works in roughly two steps:
+
+1. We divide the predictor space - that is, the set of possible values for $X_1$, $X_2$, ..., $X_p$ into $J$ distinct and non-overlapping regions, $R_1$, $R_2$, ..., $R_J$.
+
+2. For every observation that falls into the region $R_j$, we make the same prediction, which is simply the \emph{most commonly occurring class} of training observations in the region to which it belongs.
+
+Each $X_i$ uses all data points as data to split into the regions, $R_j$. The result of this is then that you get a classifier which predicts well on the training data, but falls short on testing data. This is because it fits its classifier perfectly to the data which it has seen. If it just splits up into enough $R_i$'s, it would be able to place every sample perfectly. So a lone decision tree with all features will almost always be overfitted.
 \subsubsection{Rather a forest, then just a tree}
 This is why random forests are more popular. A random forest can usually generalise much better then what a lone tree can.\\
 A random forest is constructed by choosing how many decision trees you want in the forest and then train every tree on your data. But the construction of these trees is done differently then a lone decision tree.\\
