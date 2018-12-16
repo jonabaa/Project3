@@ -328,7 +328,7 @@ Building a classification decision tree works in roughly two steps:
 2. For every observation that falls into the region $R_j$, we make the same prediction, which is simply the \emph{most commonly occurring class} of training observations in the region to which it belongs.
 
 Each $X_i$ uses all data points as data to split into the regions, $R_j$. The result of this is then that you get a classifier which predicts well on the training data, but falls short on testing data. This is because it fits its classifier perfectly to the data which it has seen. If it just splits up into enough $R_i$'s, it would be able to place every sample perfectly. So a lone decision tree with all features will almost always be overfitted.
-\subsubsection{Rather a forest, then just a tree}
+\subsubsection{Rather a forest, than just a tree}
 This is why random forests are more popular. A random forest can usually generalise much better then what a lone tree can.\\
 A random forest is constructed by choosing how many decision trees you want in the forest and then train every tree on your data. But the construction of these trees is done differently then a lone decision tree.\\
 \\
@@ -478,7 +478,7 @@ svm v forest v mlp v logistic & 0.790843 \\
 \end{table}
 
 The first thing we observe is that all most all the voting classifiers are slightly better than the single model classifiers and that they all give very similar accuracies. 
-The three highest accuracies are for soft voting with forest v mlp (0.7893), soft voting with forest v mlp v logistic (0.7961), and hard voting with svm v forest v mlp (0.7890).
+The three highest accuracies are for soft voting with forest v mlp (0.7893), soft voting with forest v mlp v logistic (0.7961), and hard voting with svm v forest v mlp (0.7980).
 These are so close, that recommending one over another based only on these number seems very hard.   
 Instead we think soft voting with forest v mlp v logistic is likely to be the best option.
 This is based on a preference for soft voting over hard voting, and for having more classifiers casting their vote.  
@@ -527,7 +527,7 @@ But these are competition solutions.
 
 To get an understanding on where our classifier fails, we split or training data into 2, trained on one part and then tried to to predict the other.
 Figure \ref{fig:confusion} shows the confusion matrix for this test. 
-
+	
  
 \begin{figure}[H]
 \caption{Confusion matrix} \label{fig:confusion}
