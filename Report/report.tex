@@ -123,6 +123,7 @@ It is also interesting to look at what the most common ingredients are:
 Salt is the most common ingredient by far. It is so common, that we can expect it to not be as good of a classifier as it probably won't be particular for a certain cuisine.
 The other ingredients are more evenly spread out, which is expected.
 More metadata can be found in the notebook "Descriptive analysis.ipynb"
+
 The paper is organized as follows: 
 \begin{itemize}
     \item
@@ -153,13 +154,18 @@ All the code we have implemented can be found at \url{https://github.com/jonabaa
 are:
     \begin{itemize}
         \item
-            testing.ipynb
+            testing.ipynb - this notebook 
+            contains all the testing of our methods
         \item
-            functions.py
+            functions.py - this file contains functions we implemented in
+            order to test our methods
         \item
-            SVM kernel test.ipynb
+            Kaggle submission script.ipynb - this file contains the script
+            for submitting our model of choice to the kaggle.com contest
         \item
-            Descriptive analysis.ipynb
+            Descriptive analysis.ipynb - this notebook contains some 
+            descriptive analysis of our dataset, just to get a feel of
+            what we are working with
     \end{itemize}
 \end{framed}
 
@@ -472,6 +478,9 @@ SUM & 1.16 & 1.74
 Since both $A$ and $B$ predict the label $-1$, a hard voting scheme will lead to the voting classifier predicting the label $-1$.
 On the other hand, if we use a soft voting scheme the voting classifier will predict $1$.
 So when using soft voting  we take into account how ''sure´´ each classifier is in its prediction, but we are restricted to using classifiers that return probabilities.  
+
+\subsection{Neural Networks}
+For explanation of neural networks consult \cite{baar}.
 
 \section{Model Selection and Verification}
 
