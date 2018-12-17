@@ -17,19 +17,18 @@ import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 
+
+
 def easydatagen():
+    """
+    This function generates training data
+    It returns:
+    x_train, x_test, y_train, y_test
+    """
+
     # Reading in the training file
     data = pd.read_json('train.json')
-    """
-    print("An example of what the data looks like:")
-    print("")
-    print(data)
 
-    print("")
-    print("Here the number of recepies of each cuisine")
-    print("")
-    print(data['cuisine'].value_counts())
-    """
     # The set of different cuisines
     cuisines = data.cuisine.unique()
 
@@ -47,14 +46,7 @@ def easydatagen():
     raw_ingredients = [clean(x) for ing in ing_list for x in ing]
 
     ingredients = sorted(set(raw_ingredients))
-    """
-    print("There are %d different ingredients." % len(ingredients))
-    print("")
-    print("")
-    print("Here is the very long list:")
-    print("")
-    print(ingredients)
-    """
+
     # build a dictionary that to each ingredient assigns its index
     ingredient_index = {}
     for i in range(0,len(ingredients)) :
@@ -79,20 +71,10 @@ def easydatagen():
 
     vect_list = [ingredients_to_vector(ing) for ing in ing_list]
     target_list = [cuisine_to_vector(cus) for cus in data.cuisine.values.tolist()]
-    """
-    print(len(vect_list))
-    print(len(target_list))
-
-    print(vect_list[30064])
-    print(target_list[30064])
-    """
 
     # Define training data
     X = np.c_[vect_list]
     Y = np.c_[target_list]
-
-    #print('Shape of X: ' + str(X.shape))
-    #print('Shape of Y: ' + str(Y.shape))
 
     Y_num = np.zeros((Y.shape[0]))
     for i in range(Y.shape[0]):
@@ -105,19 +87,10 @@ def easydatagen():
 if __name__ == '__main__':
 
     x_train, x_test, y_train, y_test = easydatagen()
-    """
-    #
-    # Let's start making forests
-    #
-    """
 
     """
-    # Makes 31 random forests with 1 to 32 trees
-    # Plots the accuracies
-
-    ###
-    This plots 32treesAcc.png
-    ###
+    Next code plots 32treesAcc.png
+    """
 
     print('Starting training:')
 
@@ -141,19 +114,15 @@ if __name__ == '__main__':
     plt.xlabel('Trees')
     plt.ylabel('Accuracy')
     plt.show()
-    """
-
-    """
     # Plot tells us that we can use 10 trees to get a decent score
-    """
 
+
+
+
+    """
+    This next code plots Max_featuresplot.png
     """
     print('Starting training:')
-
-    ###
-    This plots Max_featuresplot.png
-    ###
-
     testscores = []
     trainscores = []
     index = []
@@ -180,4 +149,3 @@ if __name__ == '__main__':
     plt.show()
 
     # Nothing conclusive
-    """
