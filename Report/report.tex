@@ -95,44 +95,70 @@ We made a late submission to kaggle and got an accuracy of $\approx 0.80$, which
 In this project we explore a delicious classification problem: 
 Given a list of ingredients, can you predict what cuisine the final dish will be?
 There are certainly cases where this is easy. 
-If you meet you friend at the store and they have burritos, guacamole, salad, and beef in their basket, you can feel confident they are having Mexican food. 
+If you meet your friend at the store and they have burritos, guacamole, salad, and beef in their basket, you can feel confident they are having Mexican food. 
 But what if they have flour, yeast, and milk? 
-They are probably baking, but are they making a French baguette our Indian naan bread?   
+They are probably baking, but are they making a French baguette or Indian naan bread?   
 
-In this project we will use various machine learning techniques to solve this classification problem.
-Our data comes from an old kaggle competition. 
+We aim to investigate the performance of four different
+machine learning techniques when applied to this problem: 
+logistic regression, support vector machines, random forests and neural
+networks. Will 
+some of the methods outperform the others by far? Or will some of the 
+methods perhaps be useless on this dataset?
+We choose to use cross-validation as our main tool in trying to answer 
+these questioins.
 
-Our data consists of 39,774 recipes which spans over 20 different cuisines. They are distributed between the 20 cuisines like this:
+Our dataset comes from an old kaggle competition. 
+It consists of 39,774 recipes which spans over 20 different cuisines.
+The following plot shows their distribution among the 20 cuisines:
 
 \includegraphics[scale=.42]{images/cuisine_number}
 We can tell from the plot that around 36\% of the data is labeled as either italian or mexican cuisine. So we should be prepared on that this uneven distribution of the recipes will affect how our predictors will do.
 
 It is also interesting to look at what the most common ingredients are:
 
-
 \includegraphics[scale=.55]{images/common_ing}
 Salt is the most common ingredient by far. It is so common, that we can expect it to not be as good of a classifier as it probably won't be particular for a certain cuisine.
 The other ingredients are more evenly spread out, which is expected.
-
-The paper is organized as follows: A section on methods, a section on selection and so on. 
-
-
-Machine learning has gained a huge popularity boost over the last couple of years. 
-And this is no wonder: the techniques 
-have a wide range of applications and can be a major asset
-if you know when to use what.
-\par
-When to use what is exactly what we're going to have a brief
-peek into in this project. 
-We will evaluate the performance of three different methods for
-classification on a data set consisting of recipies labeled with 
-the cuisines they belongs to. That is we are looking at a classification 
-problem with multiple classes. The methods we will look at are
-logistic regression, support vector machines and random forests.
+More metadata can be found in the notebook "Descriptive analysis.ipynb"
+The paper is organized as follows: 
+\begin{itemize}
+    \item
+        \textbf{Methods}: 
+        We start out by establishing how the four machine learning 
+        teqhniques actually work and explain how we preprocess and
+        format our dataset.
+    \item
+        \textbf{Model selection and verification}:
+        In this section we start to present our own work.
+        We report how we tuned our models by searching
+        over grids of parameters, and how
+        we finally used these results to create a voting classifier.
+    \item
+        \textbf{Results and discussion}:
+        We discuss our final results and some thoughts on how we possibly
+        could have made some further improvement.
+    \item
+        \textbf{Conclusion}:
+        We close off by summarizing our findings.
+    \item
+        \textbf{Appendices}:
+        Attached is prints of the jupyter notebooks. 
+\end{itemize}
 
 \begin{framed}
-All the code we have implemented can be found at \url{https://github.com/???}.
-A print of the jupyter notebook is also attached at the end of this report.
+All the code we have implemented can be found at \url{https://github.com/jonabaa/Project3/tree/master/code}. The files that this report reffers to
+are:
+    \begin{itemize}
+        \item
+            testing.ipynb
+        \item
+            functions.py
+        \item
+            SVM kernel test.ipynb
+        \item
+            Descriptive analysis.ipynb
+    \end{itemize}
 \end{framed}
 
 \section{Methods} \label{sec:methods}
@@ -388,7 +414,7 @@ So when using soft voting  we take into account how ''sure´´ each classifier i
 
 We used cross validation to decide how to tune our models. 
 Because of the size of our data set we felt that three folds would suffice.
-To preform the cross validation we used the scikit learn method \funcname{cross\_val\_score}, which returns a list of accuracies, one for each fold. 
+To perform the cross validation we used the scikit learn method \funcname{cross\_val\_score}, which returns a list of accuracies, one for each fold. 
 We simply took the average of this to the expected accuracy of a method on unseen data, similar to how cross validation for MSE is treated in \cite[Chapter 7.10]{htf:esl}.
 
 \subsection{Single model}
@@ -514,7 +540,7 @@ Mostly it is odd though.
 \section{Results and discussion} \label{sec:results}
 
 As mentioned in the introduction our data set comes from a kaggle competition. 
-The competition is over, but allows late submissions, so submitted our best classifier using the script one can see at \url{github/somewhere}. 
+The competition is over, but allows late submissions, so submitted our best classifier using the script one can see at \url{https://github.com/jonabaa/Project3/blob/master/code/Kaggle%20submission%20script.ipynb}. 
 The results are not public, so below is a screen shot of our result.
 
 \begin{figure}[H]
