@@ -198,7 +198,8 @@ for them to appear in just the training data or just the test data are relativel
 
 \subsection{Logistic Regression}
 Since we now are dealing with a classification problem with multiple
-categories, there are at least two different ways to approach this. 
+categories, there are at least two different ways to approach this with
+logistic regression. 
 The first one is maybe the easiest one technically, we simply make
 one binary model (as explained in project 2) 
 for each category. We thus have $K$ models $P_k$, 
@@ -489,6 +490,9 @@ SUM & 1.16 & 1.74
 Since both $A$ and $B$ predict the label $-1$, a hard voting scheme will lead to the voting classifier predicting the label $-1$.
 On the other hand, if we use a soft voting scheme the voting classifier will predict $1$.
 So when using soft voting  we take into account how sure each classifier is in its prediction, but we are restricted to using classifiers that return probabilities.  
+
+\subsection{Principal component analysis}
+When dealing with datasets with a large number of features, it might be of interest to investigate if we in some way could summarize the features of each datapoint using fever features. The reason for this whish could be to reduce computational needs, using a smaller model or just to try to analyze which features are more important than pther features. One popular method for answering this question is called principal component analysis, abreviated PCA. This concept can pretty easily be describred geometrically by imagining that we rotate our coordinatesystem in the predictorspace such that the first axis points in the direction that gives the highest variance in our predictions, the second axis points in the the direction that gives the second highest variance and so on. In this way we get a set of new features, namely the unit vectors induced by the axis of the new rotated coordinate system. The benefit of this process is as we previously hinted towards two things: We can if we wish simplify our model by dropping out some of the new features starting with last ones with the smallest variance and thus the smallest effect if any at all onthe predictions. Another benefit is that we now more easily can see wich features afects our predicioin more.
 
 \section{Model Selection and Verification}
 
