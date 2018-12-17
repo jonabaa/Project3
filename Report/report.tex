@@ -357,9 +357,9 @@ However, computing these are expensive and they are not guaranteed to give the s
 \subsection{Decision trees}
 Building a classification decision tree works in roughly two steps:
 
-1. We divide the predictor space - that is, the set of possible values for $X_1$, $X_2$, ..., $X_n$ for $n \in N$ into $J$ distinct and non-overlapping regions, $R_1$, $R_2$, ..., $R_J$, for $J \leq N$.
+1. We divide the predictor space - that is, the set of possible values for $x_{1,j}$, $x_{2,j}$, ..., $x_{n, j}$ for $n \in N$ and $j = K$, into $L$ distinct and non-overlapping regions, $R_1$, $R_2$, ..., $R_L$, for $L \leq N$.
 
-2. For every observation that falls into the region $R_j$, we make the same prediction, which is simply the \emph{most commonly occurring class, $k \in K$,} of training observations in the region to which it belongs.
+2. For every observation that falls into the region $R_l$, we make the same prediction, which is simply the \emph{most commonly occurring class, $k \in K$,} of training observations in the region to which it belongs.
 
 \subsubsection{The algoritm}
 The algorithm for constructing a decision tree works like this:
@@ -384,7 +384,7 @@ The algorithm for constructing a decision tree works like this:
 \end{enumerate}
 
 \paragraph{Cost complexity pruning}
-The cost complexity pruning, is the function which chooses how much error you want in your $R_j$'s, that is how many different samples in the regions.
+The cost complexity pruning, is the function which chooses how much error you want in your $R_l$'s, that is how many different samples in the regions.
 It is a function of $\alpha$, and if you choose $\alpha=0$, then you get a tree which predicts correct for every sample. So if you where to make a lone decision tree for predicting the data, this would be the parameter that you would tweak.
 
 \paragraph{Cost functions}
