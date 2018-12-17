@@ -363,9 +363,10 @@ However, computing these are expensive and they are not guaranteed to give the s
 \subsection{Decision trees}
 Building a classification decision tree works in roughly two steps:
 
-1. We divide the predictor space - that is, the set of possible values for $x_{1,j}$, $x_{2,j}$, ..., $x_{n,j}$ for $n \in N$ and $j = K$, into $J$ distinct and non-overlapping regions, $R_1$, $R_2$, ..., $R_J$, for $L \leq N$.
-
-2. For every observation that falls into the region $R_l$, we make the same prediction, which is simply the \emph{most commonly occurring class, $k \in K$,} of training observations in the region to which it belongs.
+\begin{enumerate}[label=(\arabic*)]
+	\item We divide the predictor space - that is, the set of possible values for $x_{1,j}$, $x_{2,j}$, ..., $x_{n,j}$ for $n \in N$ and $j = K$, into $J$ distinct and non-overlapping regions, $R_1$, $R_2$, ..., $R_J$, for $L \leq N$.
+	\item For every observation that falls into the region $R_l$, we make the same prediction, which is simply the \emph{most commonly occurring class, $k \in K$,} of training observations in the region to which it belongs.
+\end{enumerate}
 
 \subsubsection{The algoritm}
 The algorithm for constructing a decision tree works like this:
@@ -375,7 +376,7 @@ The algorithm for constructing a decision tree works like this:
 	data, stopping only when each terminal node has fewer than some
 	minimum number of observations.
 	\item Apply cost complexity pruning to the large tree in order to obtain a
-	sequence of best subtrees, as a function of $\alpha$.
+	sequence of best subtrees, as a function of the regularization parameter $\alpha$.
 	\item Use K-fold cross-validation to choose $\alpha$. That is, divide the training
 	observations into K folds. For each k = 1, . . . , K:
 	\begin{enumerate}
@@ -383,26 +384,27 @@ The algorithm for constructing a decision tree works like this:
 	\item Evaluate the chosen cost function error on the data in the
 	left-out kth fold, as a function of $\alpha$.
 	\end{enumerate}
-	Average the results for each value of $\alpha$, and pick ? to minimize the
+	Average the results for each value of $\alpha$, and pick $\alpha$ to minimize the
 	average error.
 	\item Return the subtree from Step 2 that corresponds to the chosen value
 	of $\alpha$.
 \end{enumerate}
 
 \paragraph{Cost complexity pruning}
-The cost complexity pruning, is the function which chooses how much error you want in your $R_j$'s, that is how many different samples in the regions.
-It is a function of $\alpha$, and if you choose $\alpha=0$, then you get a tree which predicts correct for every sample. So if you where to make a lone decision tree for predicting the data, this would be the parameter that you would tweak.
+The cost complexity pruning is the function which chooses how much error you want in your $R_j$'s, that is how many different samples in the regions.
+It is a function of $\alpha$, and if you choose $\alpha=0$, then you get a tree which predicts correct for every sample. 
+So if you were to make a lone decision tree for predicting the data, this would be the parameter that you would tweak.
 
 \paragraph{Cost functions}
-You have a few choices when you pick the cost function, but they optimize more or less as good. Compared with linear regression, they typically use the resdiual sum of squares as the cost function. A decison tree classifier has a few more options when picking the cost function. Since we plan
-classification
-to assign an observation in a given region to the most commonly occurring error rate
+You have a few choices when you pick the cost function, but they optimize more or less equally well. Compared with linear regression where we typically use the residual sum of squares as the cost function, a decision tree classifier has a few more options when picking the cost function. 
+Since we plan classification
+to assign an observation in a given region to the most commonly occurring 
 class of training observations in that region, the classification error rate is
 simply the fraction of the training observations in that region that do not
 belong to the most common class:
 $$E = 1 - {max}_k(\hat{p}_{mk}).$$
-Here $\hat{p}_{mk}$ represents the proportion of training observations in the mth
-region that are from the \emp{k}th class. However, it turns out that classification
+Here $\hat{p}_{mk}$ represents the proportion of training observations in the $m$'th
+region that are from the $k$'th class. However, it turns out that classification
 error is not sufficiently sensitive for tree-growing, and in practice two other
 measures are preferable.
 \subparagraph{Gini index}
@@ -431,11 +433,13 @@ index and the entropy are quite similar numerically.
 Each $X_i$ uses all data points as data to split into the regions, $R_j$. The result of this is then that you get a classifier which predicts well on the training data, but falls short on testing data. This is because it fits its classifier perfectly to the data which it has seen. If it just splits up into enough $R_i$'s, it would be able to place every sample perfectly. So a lone decision tree with all features will almost always be overfitted.
 
 \subsubsection{Rather a forest, than just a tree}
-This is why random forests are more popular. A random forest can usually generalise much better then what a lone tree can.\\
-A random forest is constructed by choosing how many decision trees you want in the forest and then train every tree on your data. But the construction of these trees is done differently then a lone decision tree.\\
-\\
-Each tree just use a subset of the features, typically $ features = \sqrt{all-features}$. This makes it so each tree functions a bit differently and will then predict different things.\\
+
+Since one tree can easily be over fitted, it is much more common to use a whole forests of decision trees. A random forest usually generalise much better then what a lone tree can.
+
+A random forest is constructed by choosing how many decision trees you want in the forest and then train every tree on your data. But the construction of these trees is done differently then a lone decision tree.
+Each tree just use a subset of the features, typically $ features = \sqrt{all-features}$. This makes it so each tree functions a bit differently and will then predict different things.
 The final prediction then becomes which of the classes which gets voted most for when every tree predicts their own.
+
 \subsubsection{Difference in number of trees}
 The number of trees in the forest is the main hyper parameter we have used to tweak this classifier. But it seems like the rule of thumb was the more, the merrier.
 Here is a plot of how well the random forest did:\\
@@ -620,7 +624,7 @@ The results of the cross validation test are show in Figure \ref{fig:rbfsvm}.
 The values of $C$ are on the vertical axis, and the values of $\gamma$ on the horizontal axis. 
 
 \begin{figure}[H]
-\caption{Average accuracies for rbf kernel SVM} \label{fig:rbfsvm}
+\caption{Average accuracies for rbf kernel SVM} \label{fig:pca_svm}
 \centering
 \includegraphics[scale=0.6]{images/svm_rbf.png}
 \end{figure}
