@@ -99,7 +99,7 @@ Given a list of ingredients, can you predict what cuisine the final dish will be
 There are certainly cases where this is easy. 
 If you meet your friend at the store and they have burritos, guacamole, salad, and beef in their basket, you can feel confident they are having Mexican food. 
 But what if they have flour, yeast, and milk? 
-They are probably baking, but are they making a French baguette or Indian naan bread?   
+They are probably baking, but are they making a French baguette or an Indian naan bread?   
 
 We aim to investigate the performance of four different
 machine learning techniques when applied to this problem: 
@@ -189,9 +189,11 @@ This means that a recipe that calls for tomato sauce will have the features toma
 Before using the \funcname{CountVectorizer} we clean up the data a little bit, namely we replace hyphens with spaces, to make sure e.g. \emph{low-fat} and \emph{low fat} are treated the same, and we drop all numbers and special characters. 
 The latter because the recipes are not all formatted in the same way, with some including amounts.
 When using \funcname{CountVectorizer} we set the parameter \varname{min\_df} to 3.
-This means we only include features that appear at least 3 times in all lists of ingredients. 
+This means we only include features that appear at least 3 times in all lists of ingredients.
+We do this to make all our cross validation work meaningful. 
 A feature that only appears once is useless for prediction, because it will either be contained only in the
-training data or only in the test data. We also excluded features that only appeared twice because the likelihood
+training data or only in the test data. 
+We also excluded features that only appeared twice because the likelihood
 for them to appear in just the training data or just the test data are relatively high, approximately 68\%.  
 
 \subsection{Logistic Regression}
@@ -289,7 +291,7 @@ and all data points $x_j = \begin{pmatrix} x_{j1} & x_{j2}  & \cdots & x_{jp} \e
 	\beta_0 + x_{j1} \beta_1 + x_{j2} \beta_2 + \cdots + x_{jp} \beta_p < 0.
 \end{equation}
 Intuitively all points with $t_i = 1$ lie on one side of $H$ and all points with $t_i = -1$ lie on the other side. 
-This intuition is entirely correct if $p = 2$, if $p>2$ then it is still correct, provided one has the right mental image of the sides of hyperplane. 
+This intuition is entirely correct if $p = 2$, if $p>2$ then it is still correct, provided one has the right mental image of the sides of a hyperplane. 
 Note that equations (\ref{eq:svmupper}) and (\ref{eq:svmlower}) can be combined to the single equation
 \begin{equation} \label{eq:svmsep}
 	t_i(\beta_0 + x_{i1} \beta_1 + x_{i2} \beta_2 + \cdots + x_{ip} \beta_p) > 0.
@@ -298,8 +300,6 @@ Given some new data point $z = \begin{pmatrix} z_1 & z_2  & \cdots & z_p \end{pm
 \[
 	t(\beta_0 + z_1 \beta_1 + z_2 \beta_2 + \cdots + z_p \beta_p) > 0.
 \] 
-
-\subsubsection{Data that is not linearly separable}
 
 If a given data set is linearly separable, then there will be infinitely many separating hyperplanes. 
 From one point of view, any one of these will do to make predictions. 
@@ -311,7 +311,9 @@ That is, we want to choose $\beta_0, \beta_1, \cdots, \beta_p$ such that we maxi
 \] 
 for all data points $x_i$.
 
-Of course, or data will not usually be linearly separable. 
+\subsubsection{Data that is not linearly separable}
+
+Of course, data is not usually linearly separable. 
 To still get useful classification, we will accept hyperplanes that do not cleanly separate the points. 
 This is achieved by introducing for each data point $x_i$ a slack variable $\varepsilon_i \geq 0$. 
 Then aim to find $\beta_0, \beta_1, \ldots, \beta_p$ that maximize $M > 0$ under the conditions 
@@ -322,7 +324,7 @@ Then aim to find $\beta_0, \beta_1, \ldots, \beta_p$ that maximize $M > 0$ under
 where $C \geq 0$ is a tuning parameter.
 We note that if $\varepsilon_i = 0$, then the point $x_i$ is outside the margin of the hyperplane, if $0 < \varepsilon_i < 1$, then $x_i$ is inside the margin but on the right side of the hyperplane, and if $1 < \varepsilon_i$, then $x_i$ is on the wrong side of the hyperplane, i.e. it is misclassified.  
 Hence $C$ is an upper bound on the number of point we are allowed to misclassify when we choose $H$.
-However, a choice of $C < 1$ is still very valid, it just corresponds to choosing a very narrow margin, is we do not allow many points to be inside the margin.    
+However, a choice of $C < 1$ is still very valid, it just corresponds to choosing a very narrow margin, and we do not allow many points to be inside the margin.    
 
 \subsubsection{Kernels} \label{sssec:kernels}
  
@@ -357,8 +359,8 @@ Given an unseen datapoint $z$ we classify it as belonging to the class $c$ for w
 
 \subsubsection{Getting probabilities}
 
-While support vector machines do not provide a probability estimate as described above, there is some research into how to get that. 
-Scikit learn implements a methods developed in \cite{wual}.
+While support vector machines, as described above, do not provide a probability estimate there is some research into how to get that. 
+Scikit learn implements methods developed in \cite{wual}.
 However, computing these are expensive and they are not guaranteed to give the same prediction as the usual support vector machine, so we will not use this approach in this project. 
   
 \subsection{Decision trees}
@@ -369,7 +371,7 @@ Building a classification decision tree works in roughly two steps:
 	\item For every observation that falls into the region $R_l$, we make the same prediction, which is simply the \emph{most commonly occurring class, $k \in K$,} of training observations in the region to which it belongs.
 \end{enumerate}
 
-\subsubsection{The algoritm}
+\subsubsection{The algorithm}
 The algorithm for constructing a decision tree works like this:
 
 \begin{enumerate}[label=(\arabic*)]
@@ -456,6 +458,11 @@ The default in the scikitlearn classifier is using the root of the number of all
 \\
 The plot tells us that it doesn't seem to matter much what we use as max\_features. The optimum in the plot is around 40 which gives us just more reason to stick with the default of using the root of all the features as max\_features.
 
+\subsection{Multilayer perceptrons/Neural Networks}
+In this project we use a build in neural network from scikit learn called multilayer perceptrons.
+For an explanation of neural networks consult project 2.
+
+
 \subsection{Voting Classifiers}
 
 Voting classifiers provide a way to combine a collection of classifiers $\varname{clf\_k}$, $k=1,2,\ldots,n$ to form a single classifier, $\varname{voting\_clf}$. 
@@ -483,9 +490,6 @@ SUM & 1.16 & 1.74
 Since both $A$ and $B$ predict the label $-1$, a hard voting scheme will lead to the voting classifier predicting the label $-1$.
 On the other hand, if we use a soft voting scheme the voting classifier will predict $1$.
 So when using soft voting  we take into account how sure each classifier is in its prediction, but we are restricted to using classifiers that return probabilities.  
-
-\subsection{Neural Networks}
-For an explanation of neural networks consult project 2.
 
 \section{Model Selection and Verification}
 
@@ -535,7 +539,7 @@ Since the time to train random forests grows with the number of trees, we will r
 
 The final single model we have used is neural networks, in the form of scikit learns multilayer perceptron classifier. 
 Here there are two parameters to tweak, the network structure in the form of number of layers and number of notes in each layer, as well as a regularization parameter called $\alpha$.
-The regularization done by $\alpha$ is like the ridge (or $\ell^2$) type, that have been discussed in past projects. 
+The regularization done by $\alpha$ is of the ridge (or $\ell^2$) type that have been discussed in past projects. 
 While we tested more settings, the below figures give all the relevant information.
 
 \begin{figure}[H]
@@ -551,13 +555,12 @@ This time to the setting of a single layer network with 1000 hidden nodes and $\
 
 \subsection{Voting Classifiers}
 
-We explored various combinations of the classifiers described above, and bundled them intok a single voting classifier. 
+We explored various combinations of the classifiers described above, and bundled them into a single voting classifier. 
 Since there is no good way to break ties for a hard voting scheme with only two classifiers voting, we are not investigating them. 
 Instead we looked at soft voting for all pairs of classifiers that give probabilities, that is logistic regression, random forests and multilayer preceptrons. 
 We also looked at soft voting for all three at once, and two cases of hard voting. 
 The results of the cross validation are show in Table \ref{tab:softvoting} (soft voting) and Table \ref{tab:hardvoting} (hard voting). 
-Since logistic regression and support vector machines often act very similiar \ref{} % we need something here
-we did not consider triples like svm v forest v logistic with hard voting. 
+Since logistic regression and support vector machines both use a linear approach to classification, and therefore probably give very similar answers, we did not consider triples like svm v forest v logistic with hard voting. 
 
 \begin{table} 
 \caption{Soft voting} \label{tab:softvoting}
@@ -587,7 +590,7 @@ svm v forest v mlp v logistic & 0.790843 \\
 \end{center} 
 \end{table}
 
-The first thing we observe is that all most all the voting classifiers are slightly better than the single model classifiers and that they all give very similar accuracies. 
+The first thing we observe is that almost all the voting classifiers are slightly better than the single model classifiers and that they all give very similar accuracies. 
 The three highest accuracies are for soft voting with forest v mlp (0.7893), soft voting with forest v mlp v logistic (0.7961), and hard voting with svm v forest v mlp (0.7980).
 These are so close, that recommending one over another based only on these number seems very hard.   
 Instead we think soft voting with forest v mlp v logistic is likely to be the best option.
@@ -647,6 +650,9 @@ We note that the accuracy increases as the number of components goes up.
 However, the accuracy at 2000 is actually slightly ($\approx 0.0004$) higher than the one we got using all the features.
 So if we had done this test sooner, using PCA with 2000 features might have been the way to go. 
 
+We only tried the PCA approach for support vector machines. 
+This is mostly a time constraint, but given what we have seen about the different classifiers very similar behaviour it does not seem outlandish to suggest that neither of them are likely to improve greatly by using PCA.
+
 \section{Results and discussion} \label{sec:results}
 
 As mentioned in the introduction our data set comes from a kaggle competition. 
@@ -663,17 +669,17 @@ We got an accuracy of 0.80269.
 Which would have given us a somewhat unimpressive 231st place in the competition. 
 It is worth noting the the highest accuracy achieved in the competition is 0.82783, so we are only off by about 2\% worth of accuracy.
 
-There are something one could do to do better in the competition:
+There are some things we could have done to do better in the competition:
 We could base our \funcname{CountVectorizer} on the test set, so we only consider ingredients that we will be tested on as features. 
 Since there is no submission limit, we could also just have submitted various attempt and seen which one got a better score.
 But these are competition solutions. 
-In this vain, it is also possible that we should have included the \varname{min\_df} parameter in our search for the best parameters for each method. 
-This would correspond to finding an optimal matrix representation of the raw recipe data. 
- 
+
+It is also possible that we should have included the \varname{min\_df} parameter in our search for the best parameters for each method. 
+This would correspond to finding an optimal matrix representation of the raw recipe data.  
 In general we might have spent more time exploring the quality of the data. 
 There are for instance 22 recipes that only have one ingredient, including a French and an Indian recipe both calling only for butter. 
 There is also an Indian recipe calling only for ``grained,'' which must almost surely be a typo of sorts. 
-However, we did not see a great systematic way to improve the quality of our data, and there were way to many recipes to run through by hand. 
+However, we did not see a great systematic way to improve the quality of our data, and there were way to many recipes to go through by hand. 
 
 We might also have taken a more linguistic approach and looked for key words in recipes. 
 If you are specifically asked to use Italian sausages, chances seem very good that you are making Italian food. 
