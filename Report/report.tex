@@ -14,6 +14,8 @@
 \usepackage[pdftex]{graphicx}	
 \usepackage{scrlayer-scrpage} % page setup
 
+\usepackage[section]{placeins} 
+
 \usepackage{framed}
 \usepackage[cache=false]{minted} % for source code
 %\usepackage{xcolor}
@@ -511,6 +513,22 @@ This might be because those $C$ values end up given the exact same support vecto
 But by increasing the number of points we allow inside the margin and to cross it, the classifier can depend on more data points and therefore get better accuracy. 
 Mostly it is odd though.  
 
+For completeness we also tried the Radial Basis Function kernel, called rbf in scikit learn. 
+This uses the kernel function
+\[
+ K(x_i, x_j) = \exp\left( -\gamma \|x_i - x_j\|^2 \right),
+\]
+where $\|\cdot\|$ denotes the $2$-norm. 
+Again we find that there is no real benefit to using this kernel, even though it is much more computationally demanding than a support vector machine with no kernel.
+The results of the cross validation test are show in Figure \ref{fig:rbfsvm}.
+The values of $C$ are on the vertical axis, and the values of $\gamma$ on the horizontal axis. 
+
+\begin{figure}[H]
+\caption{Average accuracies for rbf kernel SVM} \label{fig:rbfsvm}
+\centering
+\includegraphics[scale=0.6]{images/svm_rbf.png}
+\end{figure}
+
 \section{Results and discussion} \label{sec:results}
 
 As mentioned in the introduction our data set comes from a kaggle competition. 
@@ -549,7 +567,7 @@ Figure \ref{fig:confusion} shows the confusion matrix for this test.
 Each row is normalized, so that the row labeled Italian shows that of the Italian recipes 0.85 were correctly classified as Italian, but 0.04 were classified as French. 
 We also see that French is in fact the most common misclassification for Italian recipes. 
 
-\begin{figure}[H]
+\begin{figure}
 \caption{Confusion matrix} \label{fig:confusion}
 \centering
 \includegraphics[scale=0.6]{images/confusion.png}
