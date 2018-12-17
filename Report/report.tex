@@ -385,7 +385,7 @@ The algorithm for constructing a decision tree works like this:
 
 \paragraph{Cost complexity pruning}
 The cost complexity pruning, is the function which chooses how much error you want in your $R_j$'s, that is how many different samples in the regions.
-It is a function of $\alpha$, and if you choose $\alpha=0$, then you get a tree which predicts correct for every sample. So if you where to make a lone decision tree for predicting the data, this would be the paramter that you would tweak.
+It is a function of $\alpha$, and if you choose $\alpha=0$, then you get a tree which predicts correct for every sample. So if you where to make a lone decision tree for predicting the data, this would be the parameter that you would tweak.
 
 \paragraph{Cost functions}
 You have a few choices when you pick the cost function, but they optimize more or less as good. Compared with linear regression, they typically use the resdiual sum of squares as the cost function. A decison tree classifier has a few more options when picking the cost function. Since we plan
@@ -415,8 +415,8 @@ An alternative to the Gini index is entropy, given by
 $$
 D = - \sum^{K}_{k=1} \hat{p}_{mk}log\hat{p}_{mk}.
 $$
-Since 0 ? p?mk ? 1, it follows that 0 ? ?p?mk log ? pmk. One can show that
-the entropy will take on a value near zero if the p?mk?s are all near
+Since $0 \leq \hat{p}_{mk} \leq 1$, it follows that $0 \leq \hat{p}_{mk}log\hat{p}_{mk}$. One can show that
+the entropy will take on a value near zero if the $\hat{p}_{mk}$s are all near
 zero or near one. Therefore, like the Gini index, the entropy will take
 on a small value if the mth node is pure. In fact, it turns out that the Gini
 index and the entropy are quite similar numerically.
