@@ -555,6 +555,23 @@ The values of $C$ are on the vertical axis, and the values of $\gamma$ on the ho
 \includegraphics[scale=0.6]{images/svm_rbf.png}
 \end{figure}
 
+\subsection{Principal component analysis for support vector machines}
+
+After we had run all the test described above, we realized that we should try to use principal component analysis (PCA) to combine some features. 
+The idea being to reduce the number of features while getting features that have a greater explanatory power. 
+Figure \ref{fig:pca_svm} shows the results of a 3-fold cross validation of the support vector machine classifier, with no kernel. 
+We have varied the number of features the PCA should produce and the regularization parameter $C$. 
+
+\begin{figure}[H]
+\caption{Average accuracies for SVM after PCA} \label{fig:rbfsvm}
+\centering
+\includegraphics[scale=0.6]{images/pca_svm.png}
+\end{figure}
+
+We note that the accuracy increases as the number of components goes up.
+However, the accuracy at 2000 is actually slightly ($\approx 0.0004$) higher than the one we got using all the features.
+So if we had done this test sooner, using PCA with 2000 features might have been the way to go. 
+
 \section{Results and discussion} \label{sec:results}
 
 As mentioned in the introduction our data set comes from a kaggle competition. 
@@ -576,7 +593,7 @@ We could base our \funcname{CountVectorizer} on the test set, so we only conside
 Since there is no submission limit, we could also just have submitted various attempt and seen which one got a better score.
 But these are competition solutions. 
 In this vain, it is also possible that we should have included the \varname{min\_df} parameter in our search for the best parameters for each method. 
-This feels a little off, as we would look for the data that gives our methods the best results, but might still be good for the competition. 
+This would correspond to finding an optimal matrix representation of the raw recipe data. 
  
 In general we might have spent more time exploring the quality of the data. 
 There are for instance 22 recipes that only have one ingredient, including a French and an Indian recipe both calling only for butter. 
