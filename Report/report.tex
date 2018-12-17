@@ -357,10 +357,71 @@ However, computing these are expensive and they are not guaranteed to give the s
 \subsection{Decision trees}
 Building a classification decision tree works in roughly two steps:
 
-1. We divide the predictor space - that is, the set of possible values for $X_1$, $X_2$, ..., $X_p$ into $J$ distinct and non-overlapping regions, $R_1$, $R_2$, ..., $R_J$.
+1. We divide the predictor space - that is, the set of possible values for $X_1$, $X_2$, ..., $X_n$ for $n \in N$ into $J$ distinct and non-overlapping regions, $R_1$, $R_2$, ..., $R_J$, for $J \leq N$.
 
-2. For every observation that falls into the region $R_j$, we make the same prediction, which is simply the \emph{most commonly occurring class} of training observations in the region to which it belongs.
+2. For every observation that falls into the region $R_j$, we make the same prediction, which is simply the \emph{most commonly occurring class, $k \in K$,} of training observations in the region to which it belongs.
 
+\subsubsection{The algoritm}
+The algorithm for constructing a decision tree works like this:
+
+\begin{enumerate}[label=(\arabic*)]
+	\item Use recursive binary splitting to grow a large tree on the training
+	data, stopping only when each terminal node has fewer than some
+	minimum number of observations.
+	\item Apply cost complexity pruning to the large tree in order to obtain a
+	sequence of best subtrees, as a function of $\alpha$.
+	\item Use K-fold cross-validation to choose $\alpha$. That is, divide the training
+	observations into K folds. For each k = 1, . . . , K:
+	\begin{enumerate}
+	\item Repeat Steps 1 and 2 on all but the kth fold of the training data.
+	\item Evaluate the chosen cost function error on the data in the
+	left-out kth fold, as a function of $\alpha$.
+	\end{enumerate}
+	Average the results for each value of $\alpha$, and pick ? to minimize the
+	average error.
+	\item Return the subtree from Step 2 that corresponds to the chosen value
+	of $\alpha$.
+\end{enumerate}
+
+\paragraph{Cost complexity pruning}
+The cost complexity pruning, is the function which chooses how much error you want in your $R_j$'s, that is how many different samples in the regions.
+It is a function of $\alpha$, and if you choose $\alpha=0$, then you get a tree which predicts correct for every sample. So if you where to make a lone decision tree for predicting the data, this would be the paramter that you would tweak.
+
+\paragraph{Cost functions}
+You have a few choices when you pick the cost function, but they optimize more or less as good. Compared with linear regression, they typically use the resdiual sum of squares as the cost function. A decison tree classifier has a few more options when picking the cost function. Since we plan
+classification
+to assign an observation in a given region to the most commonly occurring error rate
+class of training observations in that region, the classification error rate is
+simply the fraction of the training observations in that region that do not
+belong to the most common class:
+$$E = 1 - {max}_k(\hat{p}_{mk}).$$
+Here $\hat{p}_{mk}$ represents the proportion of training observations in the mth
+region that are from the \emp{k}th class. However, it turns out that classification
+error is not sufficiently sensitive for tree-growing, and in practice two other
+measures are preferable.
+\subparagraph{Gini index}
+The \emph{Gini index} is defined by
+$$
+G = \sum^{K}_{k=1} \hat{p}_{mk}(1 - \hat{p}_{mk}),
+$$
+a measure of total variance across the $K$ classes. It is not hard to see
+that the Gini index takes on a small value if all of the $\hat{p}_{mk}$'s are close to
+zero or one. For this reason the Gini index is referred to as a measure of
+node purity - a small value indicates that a node contains predominantly
+observations from a single class.
+
+\subparagraph{Entropy}
+An alternative to the Gini index is entropy, given by
+$$
+D = - \sum^{K}_{k=1} \hat{p}_{mk}log\hat{p}_{mk}.
+$$
+Since 0 ? p?mk ? 1, it follows that 0 ? ?p?mk log ? pmk. One can show that
+the entropy will take on a value near zero if the p?mk?s are all near
+zero or near one. Therefore, like the Gini index, the entropy will take
+on a small value if the mth node is pure. In fact, it turns out that the Gini
+index and the entropy are quite similar numerically.
+\\
+\\
 Each $X_i$ uses all data points as data to split into the regions, $R_j$. The result of this is then that you get a classifier which predicts well on the training data, but falls short on testing data. This is because it fits its classifier perfectly to the data which it has seen. If it just splits up into enough $R_i$'s, it would be able to place every sample perfectly. So a lone decision tree with all features will almost always be overfitted.
 
 \subsubsection{Rather a forest, than just a tree}
