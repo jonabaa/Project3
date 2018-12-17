@@ -115,10 +115,6 @@ if __name__ == '__main__':
     # Makes 31 random forests with 1 to 32 trees
     # Plots the accuracies
 
-    ###
-    This plots 32treesAcc.png
-    ###
-
     print('Starting training:')
 
     testscores = []
@@ -149,10 +145,6 @@ if __name__ == '__main__':
 
     """
     print('Starting training:')
-
-    ###
-    This plots Max_featuresplot.png
-    ###
 
     testscores = []
     trainscores = []
