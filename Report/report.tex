@@ -442,7 +442,7 @@ The final prediction then becomes which of the classes which gets voted most for
 
 \subsubsection{Difference in number of trees}
 The number of trees in the forest is the main hyper parameter we have used to tweak this classifier. But it seems like the rule of thumb was the more, the merrier.
-Here is a plot of how well the random forest did:\\
+Here is a plot of how well the random forest did. The code for the plots is found in \textbf{RandomForest.py}. The data is produced after using \funcname{CountVectorizer} and a cleaning function, which we will go in more detail about later in the report:\\
 \includegraphics[scale=.7]{images/32treesAcc}\\
 So more trees provides a better accuracy. But the classifier starts to have a decent accuracy after 10 trees.
 
