@@ -492,7 +492,16 @@ On the other hand, if we use a soft voting scheme the voting classifier will pre
 So when using soft voting  we take into account how sure each classifier is in its prediction, but we are restricted to using classifiers that return probabilities.  
 
 \subsection{Principal component analysis}
-When dealing with datasets with a large number of features, it might be of interest to investigate if we in some way could summarize the features of each datapoint using fever features. The reason for this whish could be to reduce computational needs, using a smaller model or just to try to analyze which features are more important than pther features. One popular method for answering this question is called principal component analysis, abreviated PCA. This concept can pretty easily be describred geometrically by imagining that we rotate our coordinatesystem in the predictorspace such that the first axis points in the direction that gives the highest variance in our predictions, the second axis points in the the direction that gives the second highest variance and so on. In this way we get a set of new features, namely the unit vectors induced by the axis of the new rotated coordinate system. The benefit of this process is as we previously hinted towards two things: We can if we wish simplify our model by dropping out some of the new features starting with last ones with the smallest variance and thus the smallest effect if any at all onthe predictions. Another benefit is that we now more easily can see wich features afects our predicioin more.
+When dealing with datasets with a large number of features, it might be of interest to investigate if we in some way could summarize the features of each datapoint using fewer features.
+The reason for this wish could be to reduce computational needs, using a smaller model or just to try to analyse which features are more important than other features. 
+One popular method for answering this question is called principal component analysis, abreviated PCA. This concept can pretty easily be described geometrically by imagining that we rotate our coordinatesystem in the predictorspace such that the first axis points in the direction that gives the highest variance in our predictions, the second axis points in the the direction that gives the second highest variance and so on. 
+In this way we get a set of new features, namely the unit vectors induced by the axis of the new rotated coordinate system. 
+They will be linear combinations of already existing features. 
+Another way to realize these vectors are as eigenvectors of the covariance matrix. 
+
+The benefit of this process is as we previously hinted towards two things: 
+We can if we wish simplify our model by building new features of which we perhaps need fewer.
+Since these new features in some sense come presorted by impact it is easy to figure out which we should drop to simplify our model. 
 
 \section{Model Selection and Verification}
 
